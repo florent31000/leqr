@@ -198,7 +198,7 @@ export default function Dashboard() {
             <div>
               <h2 className="font-bold text-lg">Passez en Pro</h2>
               <p className="text-blue-100 text-sm">
-                QR dynamiques, analytics complets, modification d&apos;URL après impression.
+                Modification d&apos;URL après impression, analytics complets et redirection instantanée.
               </p>
             </div>
             <button
@@ -249,7 +249,7 @@ export default function Dashboard() {
                   </div>
                   <p className="text-xs text-gray-400 mb-4">ou 89,91€/an (3 mois offerts)</p>
                   <ul className="space-y-2 text-sm text-gray-600 mb-6">
-                    <li>✓ 50 QR dynamiques</li>
+                    <li>✓ 50 QR modifiables</li>
                     <li>✓ Modifier l&apos;URL après impression</li>
                     <li>✓ Analytics complets</li>
                     <li>✓ Sans overlay à la redirection</li>
@@ -280,7 +280,7 @@ export default function Dashboard() {
                   </div>
                   <p className="text-xs text-gray-400 mb-4">ou 269,91€/an (3 mois offerts)</p>
                   <ul className="space-y-2 text-sm text-gray-600 mb-6">
-                    <li>✓ QR dynamiques illimités</li>
+                    <li>✓ QR modifiables illimités</li>
                     <li>✓ Tout du plan Pro</li>
                     <li>✓ Domaine court personnalisé</li>
                     <li>✓ Création en masse (CSV)</li>
@@ -312,7 +312,7 @@ export default function Dashboard() {
           <div>
             <h1 className="text-2xl font-bold">Mes QR Codes</h1>
             <p className="text-sm text-gray-400 mt-1">
-              {dynamicCount}/{dynamicLimit === 9999 ? "∞" : dynamicLimit} QR dynamiques
+              {dynamicCount}/{dynamicLimit === 9999 ? "∞" : dynamicLimit} QR modifiables
               {isPaid && subscription?.current_period_end && (
                 <> — Plan {plan.charAt(0).toUpperCase() + plan.slice(1)}</>
               )}
@@ -343,14 +343,14 @@ export default function Dashboard() {
                 onClick={() => setShowCreate(true)}
                 className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg text-sm transition-all"
               >
-                + Nouveau QR dynamique
+                + Nouveau QR modifiable
               </button>
             ) : (
               <button
                 onClick={() => setShowUpgradeModal(true)}
                 className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg text-sm transition-all"
               >
-                Passer en Pro pour créer des QR dynamiques
+                Passer en Pro pour créer des QR modifiables
               </button>
             )}
           </div>
@@ -359,7 +359,7 @@ export default function Dashboard() {
         {/* Create modal */}
         {showCreate && (
           <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-lg">
-            <h2 className="font-semibold mb-4">Nouveau QR code dynamique</h2>
+            <h2 className="font-semibold mb-4">Nouveau QR code modifiable</h2>
             <div className="space-y-3">
               <input
                 type="url"
@@ -402,13 +402,13 @@ export default function Dashboard() {
               Aucun QR code pour le moment
             </h2>
             <p className="text-gray-500 mb-6">
-              Créez votre premier QR code dynamique pour suivre vos scans.
+              Passez en Pro pour créer des QR modifiables et changer leur URL après impression.
             </p>
             <button
-              onClick={() => setShowCreate(true)}
+              onClick={() => (dynamicLimit > 0 ? setShowCreate(true) : setShowUpgradeModal(true))}
               className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg"
             >
-              Créer mon premier QR
+              {dynamicLimit > 0 ? "Créer mon premier QR" : "Voir les offres"}
             </button>
           </div>
         ) : (
@@ -433,13 +433,9 @@ export default function Dashboard() {
                       {qr.label || qr.target_url}
                     </h3>
                     <span
-                      className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium shrink-0 ${
-                        qr.is_dynamic
-                          ? "bg-green-50 text-green-700"
-                          : "bg-gray-100 text-gray-500"
-                      }`}
+                      className="text-[10px] px-1.5 py-0.5 rounded-full font-medium shrink-0 bg-green-50 text-green-700"
                     >
-                      {qr.is_dynamic ? "Dynamique" : "Statique"}
+                      {isPaid ? "Modifiable" : "Via LeQR"}
                     </span>
                   </div>
                   <p className="text-xs text-gray-400 truncate">

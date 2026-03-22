@@ -24,37 +24,35 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { target_url, label, fg_color, bg_color, is_dynamic } = body;
+    const { target_url, label, fg_color, bg_color } = body;
 
     if (!target_url) {
       return NextResponse.json({ error: "URL requise" }, { status: 400 });
     }
 
-    if (is_dynamic) {
-      const { count } = await supabase
-        .from("qr_codes")
-        .select("id", { count: "exact", head: true })
-        .eq("user_id", user.id)
-        .eq("is_dynamic", true);
+    const { count } = await supabase
+      .from("qr_codes")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", user.id)
+      .eq("is_dynamic", true);
 
-      const { data: sub } = await supabase
-        .from("subscriptions")
-        .select("plan")
-        .eq("user_id", user.id)
-        .single();
+    const { data: sub } = await supabase
+      .from("subscriptions")
+      .select("plan")
+      .eq("user_id", user.id)
+      .single();
 
-      const plan = sub?.plan || "free";
-      const limits: Record<string, number> = { free: 0, pro: 50, business: 9999 };
-      const limit = limits[plan] ?? 3;
+    const plan = sub?.plan || "free";
+    const limits: Record<string, number> = { free: 0, pro: 50, business: 9999 };
+    const limit = limits[plan] ?? 0;
 
-      if ((count ?? 0) >= limit) {
-        return NextResponse.json(
-          {
-            error: `Limite de QR dynamiques atteinte (${limit}). Passez au plan supérieur.`,
-          },
-          { status: 403 }
-        );
-      }
+    if ((count ?? 0) >= limit) {
+      return NextResponse.json(
+        {
+          error: `Limite de QR modifiables atteinte (${limit}). Passez au plan supérieur.`,
+        },
+        { status: 403 }
+      );
     }
 
     const shortCode = nanoid(8);
@@ -64,11 +62,12 @@ export async function POST(req: NextRequest) {
       .insert({
         user_id: user.id,
         short_code: shortCode,
+        initial_target_url: target_url,
         target_url,
         label: label || null,
         fg_color: fg_color || "#000000",
         bg_color: bg_color || "#ffffff",
-        is_dynamic: is_dynamic || false,
+        is_dynamic: true,
       })
       .select()
       .single();

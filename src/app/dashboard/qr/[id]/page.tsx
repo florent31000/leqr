@@ -237,10 +237,8 @@ export default function QRDetailPage({
                 <h1 className="text-xl font-bold truncate">
                   {qr.label || "Sans nom"}
                 </h1>
-                <span
-                  className={`text-xs px-2 py-0.5 rounded-full font-medium ${qr.is_dynamic ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-600"}`}
-                >
-                  {qr.is_dynamic ? "Dynamique" : "Statique"}
+                <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-green-50 text-green-700">
+                  {isPro ? "Modifiable" : "Via LeQR"}
                 </span>
               </div>
 
@@ -286,14 +284,14 @@ export default function QRDetailPage({
                   ) : (
                     <span>
                       <a
-                        href={qr.target_url}
+                        href={isPro ? qr.target_url : qr.initial_target_url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-blue-600 hover:underline"
                       >
-                        {qr.target_url}
+                        {isPro ? qr.target_url : qr.initial_target_url}
                       </a>
-                      {qr.is_dynamic && isPro && (
+                      {isPro && (
                         <button
                           onClick={() => setEditing(true)}
                           className="ml-2 text-xs text-blue-600 hover:underline"
@@ -301,9 +299,9 @@ export default function QRDetailPage({
                           Modifier
                         </button>
                       )}
-                      {qr.is_dynamic && !isPro && (
+                      {!isPro && (
                         <span className="ml-2 text-xs text-amber-600">
-                          (Upgrade pour modifier)
+                          (Passez en Pro pour modifier)
                         </span>
                       )}
                     </span>
@@ -387,7 +385,7 @@ export default function QRDetailPage({
                 leqr.fr/r/{qr.short_code}
               </p>
               <p className="text-xs text-gray-400 mb-3">
-                Redirige vers : <span className="text-gray-600">{qr.target_url}</span>
+                Redirige actuellement vers : <span className="text-gray-600">{isPro ? qr.target_url : qr.initial_target_url}</span>
               </p>
               <a
                 href={`https://leqr.fr/r/${qr.short_code}`}

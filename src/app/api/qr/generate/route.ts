@@ -29,10 +29,11 @@ export async function POST(req: NextRequest) {
 
       await supabase.from("qr_codes").insert({
         short_code: shortCode,
+        initial_target_url: data,
         target_url: data,
         fg_color: fgColor || "#000000",
         bg_color: bgColor || "#ffffff",
-        is_dynamic: false,
+        is_dynamic: true,
       });
 
       qrContent = `${appUrl}/r/${shortCode}`;

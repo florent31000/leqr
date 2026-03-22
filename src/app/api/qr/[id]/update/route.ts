@@ -26,20 +26,13 @@ export async function PATCH(
 
   const { data: qr } = await supabase
     .from("qr_codes")
-    .select("id, user_id, is_dynamic")
+    .select("id, user_id")
     .eq("id", id)
     .eq("user_id", user.id)
     .single();
 
   if (!qr) {
     return NextResponse.json({ error: "QR code non trouvé" }, { status: 404 });
-  }
-
-  if (!qr.is_dynamic) {
-    return NextResponse.json(
-      { error: "Seuls les QR dynamiques peuvent être modifiés" },
-      { status: 403 }
-    );
   }
 
   const { data: sub } = await supabase
@@ -55,7 +48,7 @@ export async function PATCH(
 
   if (!isPro) {
     return NextResponse.json(
-      { error: "Abonnement Pro requis pour modifier un QR dynamique" },
+      { error: "Abonnement Pro requis pour modifier l'URL d'un QR code" },
       { status: 403 }
     );
   }

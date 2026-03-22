@@ -24,7 +24,7 @@ export async function GET(
 
   const { data: qr } = await supabase
     .from("qr_codes")
-    .select("id, target_url, user_id, is_dynamic")
+    .select("id, initial_target_url, target_url, user_id")
     .eq("short_code", code)
     .single();
 
@@ -64,10 +64,12 @@ export async function GET(
       sub.status === "active";
   }
 
-  // Anonymous QR codes (from free generator) or free users with dynamic QR:
-  // show a brief overlay before redirecting
-  if (!isPro && qr.is_dynamic) {
-    const safeUrl = qr.target_url.replace(/"/g, '\\"');
+  const destinationUrl = isPro ? qr.target_url : qr.initial_target_url;
+
+  // Tous les QR passent par LeQR. Sans abonnement actif, on conserve l'URL
+  // initiale et on affiche un court overlay.
+  if (!isPro) {
+    const safeUrl = destinationUrl.replace(/"/g, '\\"');
     const overlayHtml = `<!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -101,6 +103,5 @@ export async function GET(
     });
   }
 
-  // Free/anonymous non-dynamic QR codes: redirect immediately (no overlay)
-  return NextResponse.redirect(qr.target_url);
+  return NextResponse.redirect(destinationUrl);
 }

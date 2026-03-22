@@ -83,7 +83,7 @@ export default function Home() {
       <section className="py-8 px-4 border-y border-gray-100 bg-white">
         <div className="max-w-4xl mx-auto flex flex-wrap justify-center gap-8 text-center">
           {[
-            { num: "Gratuit", label: "QR statiques illimités" },
+            { num: "Gratuit", label: "QR via LeQR illimités" },
             { num: "HD", label: "Haute résolution sans filigrane" },
             { num: "0 pub", label: "Aucune publicité" },
             { num: "RGPD", label: "Données hébergées en France" },
@@ -162,9 +162,9 @@ export default function Home() {
                 🚫 Vos QR ne meurent JAMAIS
               </h3>
               <p className="text-blue-100 text-sm">
-                Chez les concurrents, vos QR dynamiques cessent de fonctionner
-                quand vous arrêtez de payer. Vos flyers imprimés deviennent
-                inutiles. Pas chez nous.
+                Chez les concurrents, vos QR cessent parfois de fonctionner
+                quand vous arrêtez de payer. Chez nous, ils reviennent sur leur
+                URL initiale et restent utilisables.
               </p>
             </div>
             <div className="bg-white/10 rounded-xl p-6 backdrop-blur-sm">
@@ -252,8 +252,8 @@ export default function Home() {
               <ul className="space-y-3 text-sm text-gray-600 mb-8">
                 {[
                   "Tout du plan Gratuit",
-                  "QR dynamiques (modifier l'URL après impression)",
-                  "50 QR dynamiques",
+                  "Modifier l'URL après impression",
+                  "50 QR modifiables",
                   "Analytics complets (géo, device, temps)",
                   "Aucun overlay à la redirection",
                   "Support prioritaire",
@@ -290,7 +290,7 @@ export default function Home() {
               <ul className="space-y-3 text-sm text-gray-600 mb-8">
                 {[
                   "Tout du plan Pro",
-                  "QR dynamiques illimités",
+                  "QR modifiables illimités",
                   "Domaine court personnalisé",
                   "Création en masse (CSV)",
                   "Support dédié",
@@ -322,7 +322,7 @@ export default function Home() {
             {[
               {
                 q: "Est-ce vraiment gratuit ?",
-                a: "Oui. La génération de QR codes est 100% gratuite, sans limite, sans inscription et sans filigrane. Chaque QR code créé inclut le suivi du nombre de scans. Le plan Pro débloque les QR dynamiques (modification de l'URL après impression) et les analytics détaillés.",
+                a: "Oui. La génération de QR codes est 100% gratuite, sans limite, sans inscription et sans filigrane. Tous les QR passent par nos serveurs. Le plan Pro débloque la modification de l'URL après impression et les analytics détaillés.",
               },
               {
                 q: "Quelle est la différence entre gratuit et Pro ?",
@@ -334,7 +334,7 @@ export default function Home() {
               },
               {
                 q: "Que se passe-t-il si j'arrête de payer ?",
-                a: "Vos QR dynamiques continuent de fonctionner. Un petit overlay « Propulsé par LeQR » s'affiche pendant 3 secondes avant la redirection. Vos flyers et cartes de visite restent fonctionnels.",
+                a: "Vos QR continuent de fonctionner. En revanche, ils reviennent automatiquement à leur URL initiale et un petit overlay « Propulsé par LeQR » s'affiche pendant 3 secondes avant la redirection. Vos flyers et cartes de visite restent fonctionnels.",
               },
               {
                 q: "Puis-je utiliser les QR codes à des fins commerciales ?",

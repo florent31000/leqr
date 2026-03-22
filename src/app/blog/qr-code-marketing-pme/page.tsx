@@ -34,7 +34,7 @@ export default function Article() {
           votre LinkedIn, ou un portfolio en ligne. Le papier rencontre le digital.
         </p>
         <p>
-          <strong>Astuce :</strong> utilisez un QR dynamique pour pouvoir changer la
+          <strong>Astuce :</strong> utilisez un QR modifiable pour pouvoir changer la
           destination si vous changez de poste.
         </p>
 
@@ -65,7 +65,7 @@ export default function Article() {
 
         <h2>6. Flyers et affiches mesurables</h2>
         <p>
-          Avec un QR dynamique, vous savez exactement combien de personnes ont scanné
+          Avec un QR via LeQR, vous savez exactement combien de personnes ont scanné
           votre flyer. Fini les campagnes print &quot;à l&apos;aveugle&quot;.
         </p>
 
@@ -78,9 +78,9 @@ export default function Article() {
 
         <h2>Combien ça coûte ?</h2>
         <p>
-          Sur LeQR.fr, les QR codes statiques sont <strong>100% gratuits, illimités,
-          sans inscription</strong>. Pour les QR dynamiques avec analytics, le plan Pro
-          est à seulement 9,99€/mois — le moins cher du marché.
+          Sur LeQR.fr, les QR codes sont <strong>100% gratuits, illimités,
+          sans inscription</strong>. Tous passent par nos serveurs. Pour modifier l&apos;URL
+          après impression et supprimer l&apos;overlay, le plan Pro est à seulement 9,99€/mois.
         </p>
 
         <div className="bg-blue-600 text-white rounded-2xl p-8 text-center not-prose mt-8">

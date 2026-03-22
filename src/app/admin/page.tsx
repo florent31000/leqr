@@ -24,12 +24,26 @@ interface DashboardStats {
   proUsers: number;
   businessUsers: number;
   freeUsers: number;
+  supportOpen: number;
+}
+
+interface SupportConversationRow {
+  id: string;
+  email: string;
+  status: string;
+  plan: string;
+  message_count: number;
+  last_message_at: string;
+  last_message_preview: string;
 }
 
 export default function AdminPage() {
   const [authorized, setAuthorized] = useState(false);
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState<UserRow[]>([]);
+  const [supportConversations, setSupportConversations] = useState<
+    SupportConversationRow[]
+  >([]);
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [search, setSearch] = useState("");
 
@@ -57,6 +71,7 @@ export default function AdminPage() {
     if (res.ok) {
       const data = await res.json();
       setUsers(data.users);
+      setSupportConversations(data.supportConversations || []);
       setStats(data.stats);
     }
     setLoading(false);
@@ -155,7 +170,7 @@ export default function AdminPage() {
 
         {/* KPIs */}
         {stats && (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4 mb-8">
             {[
               { label: "Utilisateurs", value: stats.totalUsers, color: "blue" },
               { label: "QR Codes", value: stats.totalQRCodes, color: "indigo" },
@@ -163,6 +178,7 @@ export default function AdminPage() {
               { label: "Pro", value: stats.proUsers, color: "violet" },
               { label: "Business", value: stats.businessUsers, color: "purple" },
               { label: "Gratuits", value: stats.freeUsers, color: "gray" },
+              { label: "SAV ouverts", value: stats.supportOpen, color: "amber" },
             ].map((kpi) => (
               <div
                 key={kpi.label}
@@ -198,7 +214,7 @@ export default function AdminPage() {
                   <th className="px-4 py-3 font-medium">Inscription</th>
                   <th className="px-4 py-3 font-medium">Plan</th>
                   <th className="px-4 py-3 font-medium">QR codes</th>
-                  <th className="px-4 py-3 font-medium">Dynamiques</th>
+                  <th className="px-4 py-3 font-medium">Modifiables</th>
                   <th className="px-4 py-3 font-medium">Scans</th>
                   <th className="px-4 py-3 font-medium">Actions</th>
                 </tr>
@@ -255,6 +271,69 @@ export default function AdminPage() {
                       className="px-4 py-8 text-center text-gray-400"
                     >
                       Aucun utilisateur trouvé
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div className="mt-8 bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100">
+            <h2 className="text-lg font-bold">Conversations SAV</h2>
+            <p className="text-sm text-gray-500">
+              Historique du chatbot visible côté admin
+            </p>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-gray-50 text-left text-gray-500 border-b border-gray-100">
+                  <th className="px-4 py-3 font-medium">Client</th>
+                  <th className="px-4 py-3 font-medium">Plan</th>
+                  <th className="px-4 py-3 font-medium">Statut</th>
+                  <th className="px-4 py-3 font-medium">Messages</th>
+                  <th className="px-4 py-3 font-medium">Dernier message</th>
+                  <th className="px-4 py-3 font-medium">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {supportConversations.map((conversation) => (
+                  <tr
+                    key={conversation.id}
+                    className="border-b border-gray-50 hover:bg-gray-50"
+                  >
+                    <td className="px-4 py-3 font-medium text-gray-900">
+                      {conversation.email}
+                    </td>
+                    <td className="px-4 py-3">{conversation.plan}</td>
+                    <td className="px-4 py-3">
+                      <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-amber-50 text-amber-700">
+                        {conversation.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">{conversation.message_count}</td>
+                    <td className="px-4 py-3 text-gray-500 max-w-[360px] truncate">
+                      {conversation.last_message_preview || "—"}
+                    </td>
+                    <td className="px-4 py-3">
+                      <a
+                        href={`/admin/support/${conversation.id}`}
+                        className="text-blue-600 hover:underline font-medium"
+                      >
+                        Ouvrir
+                      </a>
+                    </td>
+                  </tr>
+                ))}
+                {supportConversations.length === 0 && (
+                  <tr>
+                    <td
+                      colSpan={6}
+                      className="px-4 py-8 text-center text-gray-400"
+                    >
+                      Aucune conversation SAV pour le moment
                     </td>
                   </tr>
                 )}

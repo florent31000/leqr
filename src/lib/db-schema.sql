@@ -8,11 +8,12 @@ CREATE TABLE qr_codes (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE DEFAULT NULL,
   short_code VARCHAR(12) UNIQUE NOT NULL,
+  initial_target_url TEXT NOT NULL,
   target_url TEXT NOT NULL,
   label VARCHAR(255),
   fg_color VARCHAR(7) DEFAULT '#000000',
   bg_color VARCHAR(7) DEFAULT '#ffffff',
-  is_dynamic BOOLEAN DEFAULT false,
+  is_dynamic BOOLEAN DEFAULT true,
   scan_count INTEGER DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now()
@@ -51,6 +52,28 @@ CREATE TABLE subscriptions (
 
 CREATE INDEX idx_subscriptions_user_id ON subscriptions(user_id);
 
+-- Support conversations
+CREATE TABLE support_conversations (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL DEFAULT NULL,
+  visitor_email TEXT,
+  status VARCHAR(20) DEFAULT 'open' CHECK (status IN ('open', 'pending', 'closed')),
+  created_at TIMESTAMPTZ DEFAULT now(),
+  last_message_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE TABLE support_messages (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  conversation_id UUID REFERENCES support_conversations(id) ON DELETE CASCADE NOT NULL,
+  role VARCHAR(20) NOT NULL CHECK (role IN ('user', 'assistant', 'admin', 'system')),
+  content TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE INDEX idx_support_conversations_user_id ON support_conversations(user_id);
+CREATE INDEX idx_support_conversations_last_message_at ON support_conversations(last_message_at DESC);
+CREATE INDEX idx_support_messages_conversation_id ON support_messages(conversation_id);
+
 -- Auto-increment scan_count on new scan
 CREATE OR REPLACE FUNCTION increment_scan_count()
 RETURNS TRIGGER AS $$
@@ -69,6 +92,8 @@ CREATE TRIGGER on_scan_insert
 ALTER TABLE qr_codes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE scans ENABLE ROW LEVEL SECURITY;
 ALTER TABLE subscriptions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE support_conversations ENABLE ROW LEVEL SECURITY;
+ALTER TABLE support_messages ENABLE ROW LEVEL SECURITY;
 
 -- QR codes: users see their own, anonymous QR are accessible via service role only
 CREATE POLICY "Users can view own QR codes" ON qr_codes
@@ -92,3 +117,16 @@ CREATE POLICY "Service can insert scans" ON scans
 
 CREATE POLICY "Users can view own subscription" ON subscriptions
   FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can view own support conversations" ON support_conversations
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can view own support messages" ON support_messages
+  FOR SELECT USING (
+    EXISTS (
+      SELECT 1
+      FROM support_conversations
+      WHERE support_conversations.id = support_messages.conversation_id
+        AND support_conversations.user_id = auth.uid()
+    )
+  );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { getSupabase } from "@/lib/supabase";
 
 interface Message {
   role: "user" | "assistant";
@@ -19,10 +20,29 @@ export default function ChatBot() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [msgCount, setMsgCount] = useState(0);
+  const [conversationId, setConversationId] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     scrollRef.current?.scrollTo(0, scrollRef.current.scrollHeight);
+  }, [messages]);
+
+  useEffect(() => {
+    const savedConversationId = window.localStorage.getItem("leqr-chat-conversation-id");
+    const savedMessages = window.localStorage.getItem("leqr-chat-messages");
+    if (savedConversationId) setConversationId(savedConversationId);
+    if (savedMessages) {
+      try {
+        const parsed = JSON.parse(savedMessages) as Message[];
+        if (Array.isArray(parsed) && parsed.length > 0) setMessages(parsed);
+      } catch {
+        // ignore corrupted storage
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    window.localStorage.setItem("leqr-chat-messages", JSON.stringify(messages));
   }, [messages]);
 
   const send = async () => {
@@ -50,10 +70,20 @@ export default function ChatBot() {
     setMsgCount((c) => c + 1);
 
     try {
+      const {
+        data: { session },
+      } = await getSupabase().auth.getSession();
+
       const res = await fetch("/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(session?.access_token
+            ? { Authorization: `Bearer ${session.access_token}` }
+            : {}),
+        },
         body: JSON.stringify({
+          conversationId,
           messages: [...messages, userMsg].slice(-10).map((m) => ({
             role: m.role,
             content: m.content,
@@ -63,6 +93,13 @@ export default function ChatBot() {
 
       if (!res.ok) throw new Error();
       const data = await res.json();
+      if (data.conversationId) {
+        setConversationId(data.conversationId);
+        window.localStorage.setItem(
+          "leqr-chat-conversation-id",
+          data.conversationId
+        );
+      }
       setMessages((m) => [...m, { role: "assistant", content: data.reply }]);
     } catch {
       setMessages((m) => [
@@ -122,7 +159,7 @@ export default function ChatBot() {
             <div>
               <div className="font-semibold text-sm">Assistant LeQR</div>
               <div className="text-xs text-blue-100">
-                Répond en quelques secondes
+                Répond et garde l'historique du support
               </div>
             </div>
           </div>

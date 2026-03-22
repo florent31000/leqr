@@ -33,8 +33,8 @@ export default function CGV() {
         </ul>
         <h3>Plan Pro (9,99€/mois ou 89,91€/an)</h3>
         <ul>
-          <li>QR codes dynamiques (modification de l&apos;URL après impression)</li>
-          <li>50 QR codes dynamiques</li>
+          <li>Modification de l&apos;URL après impression</li>
+          <li>50 QR codes modifiables</li>
           <li>Analytics complets (géolocalisation, appareil, historique)</li>
           <li>Aucun overlay à la redirection</li>
           <li>Support prioritaire</li>
@@ -42,7 +42,7 @@ export default function CGV() {
         <h3>Plan Business (29,99€/mois ou 269,91€/an)</h3>
         <ul>
           <li>Tout du plan Pro</li>
-          <li>QR codes dynamiques illimités</li>
+          <li>QR codes modifiables illimités</li>
           <li>Domaine court personnalisé</li>
           <li>Création en masse (CSV)</li>
           <li>Support dédié</li>
@@ -62,11 +62,12 @@ export default function CGV() {
           à tout moment, effectif à la fin de la période en cours.
         </p>
 
-        <h2>5. QR codes dynamiques après résiliation</h2>
+        <h2>5. Comportement des QR codes après résiliation</h2>
         <p>
           <strong>Vos QR codes ne meurent jamais.</strong> Si vous résiliez votre abonnement Pro
-          ou Business, vos QR codes dynamiques continuent de fonctionner. Un overlay
-          &quot;Propulsé par LeQR.fr&quot; s&apos;affichera pendant 3 secondes avant la redirection.
+          ou Business, vos QR codes continuent de fonctionner mais reviennent à leur URL
+          initiale. Un overlay &quot;Propulsé par LeQR.fr&quot; s&apos;affichera pendant 3 secondes avant
+          la redirection.
         </p>
 
         <h2>6. Responsabilité</h2>

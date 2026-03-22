@@ -23,6 +23,7 @@ export type QRCode = {
   id: string;
   user_id: string;
   short_code: string;
+  initial_target_url: string;
   target_url: string;
   label: string | null;
   fg_color: string;

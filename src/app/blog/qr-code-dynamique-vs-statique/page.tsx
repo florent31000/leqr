@@ -104,15 +104,15 @@ export default function Article() {
 
         <h2>La promesse LeQR</h2>
         <p>
-          Chez LeQR.fr, vos QR codes dynamiques <strong>ne meurent jamais</strong>.
-          Si vous arrêtez de payer, un petit overlay &quot;Propulsé par LeQR.fr&quot; s&apos;affiche
-          3 secondes avant la redirection. Mais vos QR codes continuent de fonctionner.
-          Vos cartes de visite imprimées restent valides.
+          Chez LeQR.fr, vos QR codes <strong>ne meurent jamais</strong>. Si vous arrêtez de
+          payer, ils reviennent automatiquement à leur URL initiale et un petit overlay
+          &quot;Propulsé par LeQR.fr&quot; s&apos;affiche 3 secondes avant la redirection. Vos cartes de
+          visite imprimées restent valides.
         </p>
 
         <div className="bg-blue-600 text-white rounded-2xl p-8 text-center not-prose mt-8">
           <h2 className="text-2xl font-bold mb-3">Essayez les deux</h2>
-          <p className="text-blue-100 mb-6">QR statiques gratuits et illimités. QR dynamiques dès 9,99€/mois.</p>
+          <p className="text-blue-100 mb-6">QR gratuits via LeQR. Modification d&apos;URL dès 9,99€/mois.</p>
           <a
             href="/"
             className="inline-block bg-white text-blue-600 font-bold px-8 py-3 rounded-xl hover:shadow-xl transition-all"

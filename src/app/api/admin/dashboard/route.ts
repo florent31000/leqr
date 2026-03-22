@@ -34,6 +34,21 @@ export async function GET(req: NextRequest) {
     .from("subscriptions")
     .select("user_id, plan, status, stripe_customer_id");
 
+  const { data: supportConversations } = await supabase
+    .from("support_conversations")
+    .select("id, user_id, visitor_email, status, created_at, last_message_at")
+    .order("last_message_at", { ascending: false })
+    .limit(100);
+
+  const conversationIds = (supportConversations || []).map((c) => c.id);
+  const { data: supportMessages } = conversationIds.length
+    ? await supabase
+        .from("support_messages")
+        .select("conversation_id, role, content, created_at")
+        .in("conversation_id", conversationIds)
+        .order("created_at", { ascending: false })
+    : { data: [] };
+
   const subMap = new Map(
     (allSubs || []).map((s) => [s.user_id, s])
   );
@@ -74,8 +89,29 @@ export async function GET(req: NextRequest) {
     (u) => u.plan === "business" && u.sub_status === "active"
   ).length;
 
+  const authUserMap = new Map((authUsers || []).map((u) => [u.id, u]));
+  const supportItems = (supportConversations || []).map((conversation) => {
+    const owner = conversation.user_id ? authUserMap.get(conversation.user_id) : null;
+    const sub = conversation.user_id ? subMap.get(conversation.user_id) : null;
+    const messages = (supportMessages || []).filter(
+      (message) => message.conversation_id === conversation.id
+    );
+    const lastMessage = messages[0];
+
+    return {
+      id: conversation.id,
+      email: conversation.visitor_email || owner?.email || "Visiteur anonyme",
+      status: conversation.status,
+      plan: sub?.plan || "free",
+      message_count: messages.length,
+      last_message_at: conversation.last_message_at,
+      last_message_preview: lastMessage?.content?.slice(0, 120) || "",
+    };
+  });
+
   return NextResponse.json({
     users,
+    supportConversations: supportItems,
     stats: {
       totalUsers: users.length,
       totalQRCodes,
@@ -83,6 +119,7 @@ export async function GET(req: NextRequest) {
       proUsers,
       businessUsers,
       freeUsers: users.length - proUsers - businessUsers,
+      supportOpen: supportItems.filter((c) => c.status !== "closed").length,
     },
   });
 }

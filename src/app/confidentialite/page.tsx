@@ -20,8 +20,8 @@ export default function Confidentialite() {
         <h2>Données collectées</h2>
         <h3>Utilisateurs non inscrits</h3>
         <p>
-          Aucune donnée personnelle n&apos;est collectée pour la génération de QR codes statiques.
-          Aucune inscription n&apos;est requise.
+          Aucune donnée personnelle nominative n&apos;est collectée pour la génération de QR codes
+          sans compte. Aucune inscription n&apos;est requise.
         </p>
 
         <h3>Utilisateurs inscrits</h3>
@@ -33,7 +33,7 @@ export default function Confidentialite() {
 
         <h3>Analytics de scans</h3>
         <p>
-          Lorsqu&apos;un QR code dynamique est scanné, nous enregistrons de manière anonyme :
+          Lorsqu&apos;un QR code est scanné, nous enregistrons de manière anonyme :
         </p>
         <ul>
           <li>Adresse IP (pour la géolocalisation approximative)</li>

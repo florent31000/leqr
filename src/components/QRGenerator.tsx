@@ -350,13 +350,13 @@ export default function QRGenerator() {
             ) : (
               <div className="mt-6 text-center">
                 <div className="inline-flex items-center gap-2 bg-amber-50 text-amber-800 px-4 py-2 rounded-full text-sm font-medium border border-amber-200">
-                  ⚡ QR dynamique = modifiable après impression
+                  ⚡ Tous les QR passent par LeQR
                 </div>
                 <p className="text-xs text-gray-500 mt-2">
                   <a href="#pricing" className="text-blue-600 hover:underline">
                     Passez en Pro
                   </a>{" "}
-                  pour modifier vos QR codes après impression
+                  pour modifier l&apos;URL après impression et retirer l&apos;overlay
                 </p>
               </div>
             )}
