@@ -4,6 +4,12 @@ import { useEffect, useState, useCallback } from "react";
 import { getSupabase } from "@/lib/supabase";
 import type { QRCode } from "@/lib/supabase";
 
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
 interface Subscription {
   plan: string;
   status: string;
@@ -53,6 +59,13 @@ export default function Dashboard() {
       typeof window !== "undefined" &&
       new URLSearchParams(window.location.search).get("upgraded") === "true"
     ) {
+      if (typeof window.gtag === "function") {
+        window.gtag("event", "conversion", {
+          send_to: "AW-18033544712/purchase",
+          value: 9.99,
+          currency: "EUR",
+        });
+      }
       window.history.replaceState({}, "", "/dashboard");
     }
   }, []);
