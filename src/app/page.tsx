@@ -63,7 +63,7 @@ export default function Home() {
       <section id="generator" className="pt-16 pb-8 px-4">
         <div className="max-w-3xl mx-auto text-center mb-10">
           <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-1.5 rounded-full text-sm font-medium mb-6 border border-blue-100">
-            🇫🇷 100% français — 10 QR gratuits avec compte
+            🇫🇷 100% français — 10 QR codes gratuits
           </div>
           <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 leading-tight">
             Créez votre QR Code
@@ -71,7 +71,7 @@ export default function Home() {
             <span className="text-blue-600">professionnel en 30s</span>
           </h1>
           <p className="text-lg text-gray-500 max-w-xl mx-auto">
-            Créez un compte gratuit et gérez jusqu&apos;à 10 QR dans votre espace.
+            Générez vos QR codes et retrouvez-les dans votre espace gratuit.
             Téléchargez en haute résolution pour vos cartes de visite, flyers,
             menus et affiches.
           </p>
@@ -84,7 +84,7 @@ export default function Home() {
       <section className="py-8 px-4 border-y border-gray-100 bg-white">
         <div className="max-w-4xl mx-auto flex flex-wrap justify-center gap-8 text-center">
           {[
-            { num: "10", label: "QR avec compte gratuit" },
+            { num: "10", label: "QR codes gratuits" },
             { num: "Pro", label: "50 QR modifiables" },
             { num: "HD", label: "PNG et SVG sans filigrane" },
             { num: "RGPD", label: "Données hébergées en Europe" },
@@ -114,13 +114,13 @@ export default function Home() {
               },
               {
                 icon: "🎨",
-                title: "Dashboard gratuit",
-                desc: "Créez un compte gratuit pour conserver jusqu'à 10 QR, les re-télécharger et suivre leur activité.",
+                title: "Espace inclus",
+                desc: "Retrouvez vos QR, re-téléchargez-les et suivez leur activité depuis un espace simple et propre.",
               },
               {
                 icon: "📶",
                 title: "Multi-usage",
-                desc: "URL, WiFi, carte de visite, email, téléphone : un QR code pour chaque besoin courant.",
+                desc: "URL, email, téléphone : les formats les plus utiles pour un QR 100% web et traçable.",
               },
               {
                 icon: "🔄",
@@ -129,8 +129,8 @@ export default function Home() {
               },
               {
                 icon: "📊",
-                title: "Analytics",
-                desc: "Le gratuit donne le nombre total de scans. Le Pro ajoute le détail par appareil, source et historique.",
+                title: "Scans inclus",
+                desc: "Le gratuit inclut le nombre total de scans. Le Pro ajoute le détail par appareil, source et historique.",
               },
               {
                 icon: "🛡️",
@@ -176,10 +176,10 @@ export default function Home() {
               </p>
             </div>
             <div className="bg-white/10 rounded-xl p-6 backdrop-blur-sm">
-              <h3 className="font-bold text-lg mb-2">💰 Prix net et lisible</h3>
+              <h3 className="font-bold text-lg mb-2">💰 Tarif simple, sans surprise</h3>
               <p className="text-blue-100 text-sm">
-                LeQR Pro à 14,90€/mois vise un meilleur rapport qualité-prix
-                que les offres françaises autour de 16€/mois.
+                Un plan gratuit utile, un plan Pro clair, sans compromis sur la
+                qualité de service.
               </p>
             </div>
           </div>
@@ -193,7 +193,7 @@ export default function Home() {
             Des tarifs simples et honnêtes
           </h2>
           <p className="text-gray-500 text-center mb-12">
-            Créez un compte gratuit, puis passez en Pro quand vous êtes prêt.
+            Commencez avec 10 QR codes gratuits, puis passez en Pro quand vous êtes prêt.
           </p>
 
           <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
@@ -211,11 +211,10 @@ export default function Home() {
               </div>
               <ul className="space-y-3 text-sm text-gray-600 mb-8">
                 {[
-                  "Compte gratuit requis",
-                  "10 QR avec compte gratuit",
+                  "10 QR codes gratuits",
+                  "Espace pour retrouver vos QR",
                   "Personnalisation couleurs",
                   "Téléchargement PNG & SVG",
-                  "Dashboard pour retrouver vos QR",
                   "Suivi du nombre total de scans",
                   "Usage commercial autorisé",
                 ].map((f) => (
@@ -287,11 +286,11 @@ export default function Home() {
             {[
               {
                 q: "Est-ce vraiment gratuit ?",
-                a: "Oui. Vous pouvez créer jusqu'à 10 QR avec un compte gratuit, sans filigrane. Tous les QR passent par nos serveurs. Le plan Pro débloque la modification de l'URL après impression et les analytics détaillés.",
+                a: "Oui. Vous pouvez créer jusqu'à 10 QR codes gratuits dans votre espace, sans filigrane. Tous les QR passent par nos serveurs. Le plan Pro débloque la modification de l'URL après impression et les analytics détaillés.",
               },
               {
                 q: "Quelle est la différence entre gratuit et Pro ?",
-                a: "Avec le plan gratuit, vous créez jusqu'à 10 QR dans votre espace, avec téléchargement PNG/SVG et suivi du nombre total de scans. Avec le plan Pro, vous pouvez modifier l'URL de destination à tout moment, retirer l'overlay de redirection et accéder aux analytics détaillés (appareils, source, historique).",
+                a: "Avec le plan gratuit, vous créez jusqu'à 10 QR dans votre espace, avec téléchargement PNG/SVG et suivi du nombre total de scans. Avec le plan Pro, vous pouvez modifier l'URL de destination à tout moment, retirer l'overlay de redirection et accéder aux analytics détaillés des scans (appareils, source, historique).",
               },
               {
                 q: "Puis-je rendre un QR gratuit en dynamique plus tard ?",
@@ -335,7 +334,7 @@ export default function Home() {
           Prêt à créer votre QR code ?
         </h2>
         <p className="text-blue-100 mb-8">
-          10 QR gratuits avec compte, puis Pro pour aller plus loin.
+          10 QR codes gratuits, puis Pro pour aller plus loin.
         </p>
         <a
           href="#"

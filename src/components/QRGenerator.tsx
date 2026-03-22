@@ -77,12 +77,12 @@ export default function QRGenerator() {
   });
 
   const createTrackedQR = async () => {
+    if (!isInputValid()) return;
+
     if (!accessToken) {
       window.location.href = "/connexion?signup=true";
       return;
     }
-
-    if (!isInputValid()) return;
 
     setGenerating(true);
     try {
@@ -151,6 +151,10 @@ export default function QRGenerator() {
     } finally {
       setDownloadingSvg(false);
     }
+  };
+
+  const handlePrimaryAction = async () => {
+    await createTrackedQR();
   };
 
   return (
@@ -232,44 +236,38 @@ export default function QRGenerator() {
               </div>
             </div>
 
-            {accessToken ? (
-              <div className="space-y-3">
-                <button
-                  onClick={createTrackedQR}
-                  disabled={!isInputValid() || generating}
-                  className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white font-semibold py-3 px-4 rounded-xl transition-all shadow-md hover:shadow-lg"
-                >
-                  {generating ? "Création..." : "Créer mon QR"}
-                </button>
-                {qrDataURL && (
-                  <div className="flex gap-3">
-                    <button
-                      onClick={downloadPNG}
-                      className="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold py-3 px-4 rounded-xl transition-all"
-                    >
-                      Télécharger PNG
-                    </button>
-                    <button
-                      onClick={downloadSVG}
-                      disabled={downloadingSvg}
-                      className="flex-1 bg-gray-800 hover:bg-gray-900 disabled:bg-gray-300 text-white font-semibold py-3 px-4 rounded-xl transition-all"
-                    >
-                      {downloadingSvg ? "Export..." : "Télécharger SVG"}
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <a
-                href="/connexion?signup=true"
-                className="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl transition-all shadow-md hover:shadow-lg"
+            <div className="space-y-3">
+              <button
+                onClick={handlePrimaryAction}
+                disabled={!isInputValid() || generating}
+                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white font-semibold py-3 px-4 rounded-xl transition-all shadow-md hover:shadow-lg"
               >
-                Créer un compte gratuit
-              </a>
-            )}
+                {generating ? "Génération..." : "Générer mon QR code"}
+              </button>
+              {accessToken && qrDataURL && (
+                <div className="flex gap-3">
+                  <button
+                    onClick={downloadPNG}
+                    className="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold py-3 px-4 rounded-xl transition-all"
+                  >
+                    Télécharger PNG
+                  </button>
+                  <button
+                    onClick={downloadSVG}
+                    disabled={downloadingSvg}
+                    className="flex-1 bg-gray-800 hover:bg-gray-900 disabled:bg-gray-300 text-white font-semibold py-3 px-4 rounded-xl transition-all"
+                  >
+                    {downloadingSvg ? "Export..." : "Télécharger SVG"}
+                  </button>
+                </div>
+              )}
+            </div>
 
             <p className="text-xs text-gray-400 mt-3 text-center">
-              10 QR gratuits avec compte, haute résolution, usage commercial autorisé
+              10 QR codes gratuits, haute résolution, usage commercial autorisé
+            </p>
+            <p className="text-xs text-gray-500 mt-1 text-center">
+              Vos QR sont enregistrés dans votre espace pour être retrouvés et suivis.
             </p>
           </div>
 
@@ -286,13 +284,19 @@ export default function QRGenerator() {
                 />
               ) : (
                 <div className="text-gray-300 text-center p-8">
-                  <div className="text-5xl mb-3">⬜</div>
-                  <p className="text-sm">
-                    {generating
-                      ? "Génération..."
-                      : accessToken
-                        ? "Créez votre QR pour afficher la version finale via LeQR"
-                        : "Créez un compte gratuit pour générer un QR via LeQR"}
+                  <div className="mx-auto mb-4 grid grid-cols-5 gap-1 w-24 h-24 opacity-60">
+                    {Array.from({ length: 25 }).map((_, index) => (
+                      <div
+                        key={index}
+                        className={index % 2 === 0 ? "bg-gray-300 rounded-sm" : "bg-gray-100 rounded-sm"}
+                      />
+                    ))}
+                  </div>
+                  <p className="text-sm font-medium text-gray-500">
+                    {generating ? "Génération..." : "Votre QR code apparaîtra ici"}
+                  </p>
+                  <p className="text-xs text-gray-400 mt-2">
+                    Personnalisez-le puis cliquez sur « Générer mon QR code ».
                   </p>
                 </div>
               )}
@@ -323,7 +327,7 @@ export default function QRGenerator() {
             ) : (
               <div className="mt-6 text-center">
                 <div className="inline-flex items-center gap-2 bg-amber-50 text-amber-800 px-4 py-2 rounded-full text-sm font-medium border border-amber-200">
-                  {accessToken ? "Compte gratuit : 10 QR inclus" : "Compte requis pour générer"}
+                  {accessToken ? "10 QR codes gratuits inclus" : "PNG HD, SVG et suivi inclus"}
                 </div>
                 <p className="text-xs text-gray-500 mt-2">
                   {accessToken ? (
@@ -335,7 +339,7 @@ export default function QRGenerator() {
                     </>
                   ) : (
                     <>
-                      Créez un compte gratuit pour générer vos QR, les suivre et les retrouver dans votre dashboard.
+                      Générez votre QR en 1 clic puis retrouvez-le dans votre espace.
                     </>
                   )}
                 </p>
