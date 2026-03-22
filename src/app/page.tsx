@@ -60,7 +60,7 @@ export default function Home() {
       </nav>
 
       {/* Hero */}
-      <section className="pt-16 pb-8 px-4">
+      <section id="generator" className="pt-16 pb-8 px-4">
         <div className="max-w-3xl mx-auto text-center mb-10">
           <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-1.5 rounded-full text-sm font-medium mb-6 border border-blue-100">
             🇫🇷 100% français — gratuit — sans inscription
@@ -224,7 +224,7 @@ export default function Home() {
                 ))}
               </ul>
               <a
-                href="#"
+                href="#generator"
                 className="block w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-3 rounded-xl transition-all"
               >
                 C&apos;est déjà gratuit ↑

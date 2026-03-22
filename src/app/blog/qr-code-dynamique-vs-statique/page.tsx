@@ -63,7 +63,7 @@ export default function Article() {
         <ul>
           <li>Nécessite un compte</li>
           <li>Dépend du service LeQR.fr (mais chez nous, vos QR ne meurent jamais)</li>
-          <li>Le plan gratuit est limité à 3 QR dynamiques</li>
+          <li>Fonctionnalité réservée aux plans Pro et Business</li>
         </ul>
 
         <h2>Quand utiliser chaque type ?</h2>
@@ -112,7 +112,7 @@ export default function Article() {
 
         <div className="bg-blue-600 text-white rounded-2xl p-8 text-center not-prose mt-8">
           <h2 className="text-2xl font-bold mb-3">Essayez les deux</h2>
-          <p className="text-blue-100 mb-6">QR statiques gratuits et illimités. 3 QR dynamiques offerts.</p>
+          <p className="text-blue-100 mb-6">QR statiques gratuits et illimités. QR dynamiques dès 9,99€/mois.</p>
           <a
             href="/"
             className="inline-block bg-white text-blue-600 font-bold px-8 py-3 rounded-xl hover:shadow-xl transition-all"

@@ -80,7 +80,7 @@ export default function Article() {
         <p>
           Sur LeQR.fr, les QR codes statiques sont <strong>100% gratuits, illimités,
           sans inscription</strong>. Pour les QR dynamiques avec analytics, le plan Pro
-          est à 5,99€/mois — 3x moins cher que les concurrents.
+          est à seulement 9,99€/mois — le moins cher du marché.
         </p>
 
         <div className="bg-blue-600 text-white rounded-2xl p-8 text-center not-prose mt-8">

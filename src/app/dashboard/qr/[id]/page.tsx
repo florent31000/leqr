@@ -97,6 +97,23 @@ export default function QRDetailPage({
     setSaving(false);
   };
 
+  const handleDelete = async () => {
+    if (!confirm("Supprimer ce QR code ? Cette action est irréversible. Les statistiques seront perdues.")) return;
+    const {
+      data: { session },
+    } = await getSupabase().auth.getSession();
+    if (!session) return;
+    const res = await fetch(`/api/qr/${qrId}/delete`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${session.access_token}` },
+    });
+    if (res.ok) {
+      window.location.href = "/dashboard";
+    } else {
+      alert("Erreur lors de la suppression");
+    }
+  };
+
   const isPro =
     subscription &&
     (subscription.plan === "pro" || subscription.plan === "business") &&
@@ -205,6 +222,12 @@ export default function QRDetailPage({
                 >
                   Copier le lien
                 </button>
+                <button
+                  onClick={handleDelete}
+                  className="text-xs bg-red-50 text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-100 transition-colors font-medium"
+                >
+                  Supprimer
+                </button>
               </div>
             </div>
 
@@ -287,7 +310,7 @@ export default function QRDetailPage({
                   )}
                 </p>
                 <p>
-                  <span className="font-medium text-gray-700">Cree le :</span>{" "}
+                  <span className="font-medium text-gray-700">Créé le :</span>{" "}
                   {new Date(qr.created_at).toLocaleDateString("fr-FR", {
                     day: "numeric",
                     month: "long",

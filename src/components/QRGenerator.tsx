@@ -329,9 +329,18 @@ export default function QRGenerator() {
             {shortCode ? (
               <div className="mt-6 text-center">
                 <div className="inline-flex items-center gap-2 bg-green-50 text-green-800 px-4 py-2 rounded-full text-sm font-medium border border-green-200">
-                  ✓ QR code créé — scans trackés automatiquement
+                  ✓ QR code téléchargé
                 </div>
-                <p className="text-xs text-gray-500 mt-2">
+                <p className="text-sm text-gray-600 mt-3">
+                  <a
+                    href="/connexion?signup=true"
+                    className="text-blue-600 hover:underline font-medium"
+                  >
+                    Créez un compte gratuit
+                  </a>{" "}
+                  pour suivre les scans et gérer vos QR codes
+                </p>
+                <p className="text-xs text-gray-400 mt-1">
                   Besoin de modifier l&apos;URL après impression ?{" "}
                   <a href="#pricing" className="text-blue-600 hover:underline">
                     Passez en Pro

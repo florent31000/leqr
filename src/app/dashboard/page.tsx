@@ -132,10 +132,32 @@ export default function Dashboard() {
     setCreating(false);
   };
 
+  const deleteQR = async (qrId: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!confirm("Supprimer ce QR code ? Cette action est irréversible.")) return;
+    const {
+      data: { session },
+    } = await getSupabase().auth.getSession();
+    if (!session) return;
+    const res = await fetch(`/api/qr/${qrId}/delete`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${session.access_token}` },
+    });
+    if (res.ok) loadData();
+    else alert("Erreur lors de la suppression");
+  };
+
   const logout = async () => {
     await getSupabase().auth.signOut();
     window.location.href = "/";
   };
+
+  const plan = subscription?.plan || "free";
+  const isActive = subscription?.status === "active";
+  const isPaid = isActive && plan !== "free";
+  const dynamicCount = qrCodes.filter((q) => q.is_dynamic).length;
+  const dynamicLimit = plan === "business" ? 9999 : plan === "pro" ? 50 : 0;
 
   if (loading) {
     return (
@@ -286,14 +308,52 @@ export default function Dashboard() {
           </div>
         )}
 
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-2xl font-bold">Mes QR Codes</h1>
-          <button
-            onClick={() => setShowCreate(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg text-sm transition-all"
-          >
-            + Nouveau QR dynamique
-          </button>
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h1 className="text-2xl font-bold">Mes QR Codes</h1>
+            <p className="text-sm text-gray-400 mt-1">
+              {dynamicCount}/{dynamicLimit === 9999 ? "∞" : dynamicLimit} QR dynamiques
+              {isPaid && subscription?.current_period_end && (
+                <> — Plan {plan.charAt(0).toUpperCase() + plan.slice(1)}</>
+              )}
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            {isPaid && (
+              <button
+                onClick={async () => {
+                  const { data: { session } } = await getSupabase().auth.getSession();
+                  if (!session) return;
+                  const res = await fetch("/api/stripe-portal", {
+                    method: "POST",
+                    headers: { Authorization: `Bearer ${session.access_token}` },
+                  });
+                  if (res.ok) {
+                    const { url } = await res.json();
+                    window.location.href = url;
+                  }
+                }}
+                className="text-xs text-gray-500 hover:text-gray-700 border border-gray-200 px-3 py-2 rounded-lg"
+              >
+                Gérer mon abonnement
+              </button>
+            )}
+            {dynamicLimit > 0 ? (
+              <button
+                onClick={() => setShowCreate(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg text-sm transition-all"
+              >
+                + Nouveau QR dynamique
+              </button>
+            ) : (
+              <button
+                onClick={() => setShowUpgradeModal(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg text-sm transition-all"
+              >
+                Passer en Pro pour créer des QR dynamiques
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Create modal */}
@@ -392,6 +452,13 @@ export default function Dashboard() {
                   </div>
                   <div className="text-xs text-gray-400">scans</div>
                 </div>
+                <button
+                  onClick={(e) => deleteQR(qr.id, e)}
+                  className="shrink-0 text-gray-300 hover:text-red-500 transition-colors p-1"
+                  title="Supprimer"
+                >
+                  ✕
+                </button>
                 <div className="shrink-0 text-gray-300">
                   →
                 </div>
