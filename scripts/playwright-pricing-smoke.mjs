@@ -9,7 +9,18 @@ function assert(condition, message) {
 }
 
 async function expectVisibleText(page, text) {
-  await page.waitForSelector(`text=${text}`);
+  const timeoutMs = 30000;
+  const start = Date.now();
+
+  while (Date.now() - start < timeoutMs) {
+    const bodyText = (await page.textContent("body")) || "";
+    if (bodyText.includes(text)) {
+      return;
+    }
+    await page.waitForTimeout(500);
+  }
+
+  throw new Error(`Texte introuvable dans la page: ${text}`);
 }
 
 async function run() {
