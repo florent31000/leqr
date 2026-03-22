@@ -1,20 +1,39 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import "./globals.css";
 import ChatBot from "@/components/ChatBot";
+import CookieBanner from "@/components/CookieBanner";
+import AnalyticsScripts from "@/components/AnalyticsScripts";
 
 export const metadata: Metadata = {
-  title: "LeQR.fr — Générateur de QR Codes Professionnel Gratuit",
+  metadataBase: new URL("https://leqr.fr"),
+  title: "LeQR.fr — QR statiques gratuits et QR dynamiques pour le print",
   description:
-    "Créez des QR codes professionnels en 30 secondes. 10 QR codes gratuits, QR via LeQR, analytics et personnalisation.",
+    "Téléchargez un QR statique gratuit sans compte ou créez un QR dynamique pour vos supports imprimés. Analytics, modification d'URL et continuité sans réimpression.",
   keywords:
-    "QR code, générateur QR code, créer QR code, QR code gratuit, QR code dynamique, QR code professionnel",
+    "QR code, générateur QR code, QR code gratuit, QR code dynamique, QR code statique, QR code professionnel",
   openGraph: {
-    title: "LeQR.fr — Créez votre QR Code Pro en 30 secondes",
+    title: "LeQR.fr — QR statiques gratuits et QR dynamiques pour le print",
     description:
-      "Générateur de QR codes professionnel français. Gratuit, simple, fiable.",
+      "Créez un QR statique gratuit sans compte ou un QR dynamique pensé pour vos supports imprimés.",
     type: "website",
     locale: "fr_FR",
+    url: "https://leqr.fr",
+    siteName: "LeQR.fr",
+    images: [
+      {
+        url: "/logo.png",
+        width: 512,
+        height: 512,
+        alt: "LeQR.fr",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "LeQR.fr — QR statiques gratuits et QR dynamiques",
+    description:
+      "Créez vos QR pour le print, suivez les scans et gardez le même code même si vos liens évoluent.",
+    images: ["/logo.png"],
   },
   icons: {
     icon: "/logo.png",
@@ -38,16 +57,8 @@ export default function RootLayout({
       <body className="antialiased">
         {children}
         <ChatBot />
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=AW-18033544712"
-          strategy="afterInteractive"
-        />
-        <Script id="google-ads-init" strategy="afterInteractive">
-          {`window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'AW-18033544712');`}
-        </Script>
+        <CookieBanner />
+        <AnalyticsScripts />
       </body>
     </html>
   );

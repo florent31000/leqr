@@ -2,6 +2,9 @@ export const metadata = {
   title: "QR Code WiFi — Partagez votre WiFi en un scan — LeQR.fr",
   description:
     "Créez un QR code WiFi gratuit. Vos invités, clients ou collaborateurs se connectent en un scan. Plus besoin de dicter le mot de passe.",
+  alternates: {
+    canonical: "/qr-code-wifi",
+  },
 };
 
 export default function QRCodeWifi() {
@@ -90,7 +93,8 @@ export default function QRCodeWifi() {
             Créez votre QR code WiFi maintenant
           </h2>
           <p className="text-blue-100 mb-6">
-            Compte gratuit requis, puis jusqu&apos;à 10 QR inclus.
+            Le QR WiFi peut être téléchargé gratuitement sans compte. Utilisez le
+            dynamique seulement si vous voulez garder un QR dans votre espace.
           </p>
           <a
             href="/"

@@ -2,6 +2,9 @@ export const metadata = {
   title: "QR Code pour Carte de Visite — LeQR.fr",
   description:
     "Créez un QR code pour votre carte de visite. Lien vers votre site, LinkedIn, portfolio. Dynamique : modifiez l'URL après impression.",
+  alternates: {
+    canonical: "/qr-code-carte-visite",
+  },
 };
 
 export default function QRCodeCarteVisite() {
@@ -74,7 +77,10 @@ export default function QRCodeCarteVisite() {
 
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-2xl p-8 text-center">
           <h2 className="text-2xl font-bold mb-3">Prêt à créer votre QR code ?</h2>
-          <p className="text-blue-100 mb-6">Compte gratuit requis, puis jusqu&apos;à 10 QR inclus.</p>
+          <p className="text-blue-100 mb-6">
+            Testez un QR statique gratuitement ou créez votre QR dynamique pour ne
+            plus réimprimer vos cartes quand votre lien change.
+          </p>
           <a
             href="/"
             className="inline-block bg-white text-blue-600 font-bold px-8 py-3 rounded-xl hover:shadow-xl transition-all"

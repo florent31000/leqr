@@ -2,6 +2,9 @@ export const metadata = {
   title: "QR Code pour Événement — Billetterie, check-in, infos — LeQR.fr",
   description:
     "Créez des QR codes pour vos événements : check-in, programme, billetterie. QR dynamiques modifiables après impression des supports.",
+  alternates: {
+    canonical: "/qr-code-evenement",
+  },
 };
 
 export default function QRCodeEvenement() {
@@ -74,7 +77,8 @@ export default function QRCodeEvenement() {
             Préparez vos QR codes pour votre événement
           </h2>
           <p className="text-blue-100 mb-6">
-            Compte gratuit requis, puis jusqu&apos;à 10 QR inclus.
+            Testez un QR statique pour aller vite, ou créez un QR dynamique si
+            votre programme, votre page d&apos;inscription ou vos contenus peuvent évoluer.
           </p>
           <a
             href="/"

@@ -1,7 +1,10 @@
 export const metadata = {
   title: "QR Code Avis Google — Boostez vos avis clients — LeQR.fr",
   description:
-    "Créez un QR code qui pointe vers votre page d'avis Google. Collectez plus d'avis 5 étoiles facilement.",
+    "Créez un QR code qui pointe vers votre page d'avis Google. Placez-le en caisse, sur l'addition ou en boutique, puis faites évoluer votre destination si besoin.",
+  alternates: {
+    canonical: "/qr-code-avis-google",
+  },
 };
 
 export default function QRCodeAvisGoogle() {
@@ -27,7 +30,9 @@ export default function QRCodeAvisGoogle() {
           QR Code pour collecte d&apos;avis Google
         </h1>
         <p className="text-lg text-gray-600 mb-8">
-          Les avis Google sont le premier critère de choix pour 87% des consommateurs français. Un QR code bien placé multiplie par 3 le nombre d&apos;avis reçus.
+          Facilitez la collecte d&apos;avis en envoyant vos clients vers la bonne page
+          au bon moment: en caisse, sur l&apos;addition, sur un comptoir ou une carte
+          de remerciement.
         </p>
 
         <h2 className="text-2xl font-bold mb-4">Pourquoi ça marche</h2>
@@ -76,7 +81,9 @@ export default function QRCodeAvisGoogle() {
             Astuce Pro : utilisez un QR dynamique
           </h3>
           <p className="text-green-800 text-sm">
-            Avec un QR dynamique LeQR, vous pouvez suivre le nombre de scans et ainsi mesurer l&apos;efficacité de chaque emplacement. Vous pouvez aussi changer l&apos;URL de destination si vous changez d&apos;établissement ou de page d&apos;avis.
+            Avec un QR dynamique LeQR, vous pouvez suivre le nombre de scans par
+            support et garder le même QR si vous changez de fiche Google, de page
+            intermédiaire ou de campagne d&apos;avis.
           </p>
         </div>
 
@@ -85,7 +92,7 @@ export default function QRCodeAvisGoogle() {
             Boostez vos avis Google dès maintenant
           </h2>
           <p className="text-blue-100 mb-6">
-            Créez votre QR code avis Google en 30 secondes. Gratuit.
+            Testez un QR statique gratuit ou créez un QR dynamique pour suivre les scans et garder le même code dans le temps.
           </p>
           <a
             href="/"

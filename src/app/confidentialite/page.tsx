@@ -20,8 +20,10 @@ export default function Confidentialite() {
         <h2>Données collectées</h2>
         <h3>Visiteurs non inscrits</h3>
         <p>
-          Nous ne générons pas de QR code téléchargeable sans compte. Un visiteur non inscrit peut
-          seulement consulter le site et préparer sa saisie avant création de compte.
+          Un visiteur non inscrit peut générer et télécharger un QR code statique
+          sans créer de compte. Dans ce cas, nous ne collectons pas d&apos;email ni de
+          données de compte. Nous traitons seulement les requêtes techniques
+          nécessaires à la génération du QR.
         </p>
 
         <h3>Utilisateurs inscrits</h3>
@@ -74,9 +76,11 @@ export default function Confidentialite() {
 
         <h2>Cookies</h2>
         <p>
-          LeQR.fr utilise uniquement des cookies techniques nécessaires au fonctionnement
-          du service (session d&apos;authentification). Aucun cookie publicitaire ou de tracking
-          n&apos;est utilisé.
+          LeQR.fr utilise des cookies techniques nécessaires au fonctionnement du
+          service (session d&apos;authentification). Avec votre consentement, nous
+          pouvons aussi activer des cookies de mesure Google Ads pour analyser
+          l&apos;efficacité de nos campagnes. Vous pouvez refuser cette mesure depuis
+          le bandeau affiché sur le site.
         </p>
       </div>
     </div>

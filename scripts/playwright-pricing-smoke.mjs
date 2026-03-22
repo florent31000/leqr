@@ -43,38 +43,55 @@ async function run() {
 
   assert(homepageHtml.includes("14,90"), "Le prix Pro n'est pas visible sur la homepage.");
   assert(
-    homepageHtml.includes("10 QR codes gratuits"),
-    "La promesse des 10 QR codes gratuits n'est pas visible sur la homepage."
+    homepageHtml.includes("QR statiques gratuits"),
+    "La promesse statique gratuite n'est pas visible sur la homepage."
   );
   assert(
-    homepageHtml.includes("Générer mon QR code") ||
-      homepageHtml.includes("G&eacute;n&eacute;rer mon QR code"),
-    "Le CTA principal de génération n'est pas visible."
+    homepageHtml.includes("Générer mon QR dynamique") ||
+      homepageHtml.includes("G&eacute;n&eacute;rer mon QR dynamique"),
+    "Le CTA dynamique principal n'est pas visible."
   );
   assert(
     homepageHtml.includes("Votre QR code apparaîtra ici") ||
       homepageHtml.includes("Votre QR code appara"),
     "Le bloc d'aperçu de QR n'est pas visible."
   );
-  assert(!homepageHtml.includes("Business"), "Le plan Business est encore visible sur la homepage.");
   assert(
-    !homepageHtml.includes("3 QR sans compte"),
-    "La homepage mentionne encore un accès sans compte."
+    homepageHtml.includes("Menu restaurant"),
+    "Les landing pages par use case ne sont pas visibles depuis la homepage."
+  );
+  assert(
+    !homepageHtml.includes(">Business<"),
+    "Le plan Business est encore visible sur la homepage."
   );
   assert(
     !homepageHtml.includes("Créer un compte gratuit"),
     "Le CTA de la homepage parle encore de création de compte."
   );
-  assert(
-    !homepageHtml.includes("Compte requis pour générer"),
-    "Le wording de la homepage n'est pas assez propre."
-  );
 
   await page.goto(baseUrl, { waitUntil: "networkidle" });
   await page.waitForSelector('input[type="url"]');
   assert(
-    await page.getByRole("button", { name: /QR code/i }).first().isVisible(),
-    "Le CTA principal n'est pas visible dans l'interface."
+    await page.getByRole("button", { name: /Générer mon QR dynamique/i }).isVisible(),
+    "Le CTA dynamique n'est pas visible dans l'interface."
+  );
+  await page.locator('input[type="url"]').fill("https://example.com/landing");
+  await page.waitForSelector('img[alt="QR Code"]', { timeout: 30000 });
+
+  const staticResponse = await context.request.post(`${baseUrl}/api/qr/generate`, {
+    data: {
+      data: "https://example.com/free-static",
+      fgColor: "#000000",
+      bgColor: "#ffffff",
+      size: 1000,
+      format: "png",
+      tracked: false,
+    },
+  });
+  const staticBody = await staticResponse.json();
+  assert(
+    staticResponse.status() === 200 && typeof staticBody.dataURL === "string",
+    "La génération statique gratuite n'a pas fonctionné."
   );
 
   const response = await context.request.post(`${baseUrl}/api/qr/generate`, {
@@ -100,6 +117,9 @@ async function run() {
     String(blockedStatus.body?.error || "").includes("Compte requis"),
     `Message backend inattendu: ${JSON.stringify(blockedStatus.body)}`
   );
+
+  await page.getByRole("button", { name: /Générer mon QR dynamique/i }).click();
+  await page.waitForURL(/\/connexion\?signup=true/, { timeout: 30000 });
 
   assert(
     consoleErrors.length === 0,

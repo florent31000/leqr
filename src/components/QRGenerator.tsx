@@ -5,6 +5,8 @@ import { getSupabase } from "@/lib/supabase";
 
 const PRESETS = [
   { label: "URL", icon: "🔗", placeholder: "https://exemple.fr" },
+  { label: "WiFi", icon: "📶", placeholder: "Nom du réseau" },
+  { label: "Texte", icon: "📝", placeholder: "Votre texte" },
   { label: "Email", icon: "✉️", placeholder: "contact@exemple.fr" },
   { label: "Téléphone", icon: "📞", placeholder: "+33 6 12 34 56 78" },
 ];
@@ -23,13 +25,20 @@ const COLORS = [
 export default function QRGenerator() {
   const [activeTab, setActiveTab] = useState(0);
   const [url, setUrl] = useState("https://");
+  const [wifiName, setWifiName] = useState("");
+  const [wifiPassword, setWifiPassword] = useState("");
+  const [wifiSecurity, setWifiSecurity] = useState("WPA");
+  const [text, setText] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [fgColor, setFgColor] = useState("#000000");
   const [bgColor, setBgColor] = useState("#ffffff");
-  const [qrDataURL, setQrDataURL] = useState<string | null>(null);
+  const [previewDataURL, setPreviewDataURL] = useState<string | null>(null);
+  const [dynamicDataURL, setDynamicDataURL] = useState<string | null>(null);
   const [shortCode, setShortCode] = useState<string | null>(null);
-  const [generating, setGenerating] = useState(false);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [creatingDynamic, setCreatingDynamic] = useState(false);
+  const [downloadingPng, setDownloadingPng] = useState(false);
   const [downloadingSvg, setDownloadingSvg] = useState(false);
   const [accessToken, setAccessToken] = useState<string | null>(null);
 
@@ -49,32 +58,91 @@ export default function QRGenerator() {
       case 0:
         return url;
       case 1:
-        return `mailto:${email}`;
+        return `WIFI:T:${wifiSecurity};S:${wifiName};P:${wifiPassword};;`;
       case 2:
+        return text;
+      case 3:
+        return `mailto:${email}`;
+      case 4:
         return `tel:${phone}`;
       default:
         return url;
     }
-  }, [activeTab, url, email, phone]);
+  }, [activeTab, url, wifiSecurity, wifiName, wifiPassword, text, email, phone]);
 
   const isInputValid = useCallback((): boolean => {
     const data = getQRData();
     if (!data) return false;
     if (activeTab === 0 && (data === "https://" || data.length < 10)) return false;
-    if (activeTab === 1 && (data === "mailto:" || !email)) return false;
-    if (activeTab === 2 && (data === "tel:" || !phone)) return false;
+    if (activeTab === 1 && !wifiName) return false;
+    if (activeTab === 2 && !text.trim()) return false;
+    if (activeTab === 3 && (data === "mailto:" || !email)) return false;
+    if (activeTab === 4 && (data === "tel:" || !phone)) return false;
     return true;
-  }, [getQRData, activeTab, email, phone]);
+  }, [getQRData, activeTab, wifiName, text, email, phone]);
 
   useEffect(() => {
-    setQrDataURL(null);
+    setDynamicDataURL(null);
     setShortCode(null);
-  }, [activeTab, url, email, phone, fgColor, bgColor]);
+  }, [
+    activeTab,
+    url,
+    wifiName,
+    wifiPassword,
+    wifiSecurity,
+    text,
+    email,
+    phone,
+    fgColor,
+    bgColor,
+  ]);
 
   const buildTrackedHeaders = (): HeadersInit => ({
     "Content-Type": "application/json",
     ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
   });
+
+  const generatePreview = useCallback(async () => {
+    if (!isInputValid()) {
+      setPreviewDataURL(null);
+      return;
+    }
+
+    setPreviewLoading(true);
+    try {
+      const res = await fetch("/api/qr/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          data: getQRData(),
+          fgColor,
+          bgColor,
+          size: 600,
+          format: "png",
+          tracked: false,
+        }),
+      });
+      const json = await res.json();
+      if (res.ok && json.dataURL) {
+        setPreviewDataURL(json.dataURL);
+      }
+    } finally {
+      setPreviewLoading(false);
+    }
+  }, [isInputValid, getQRData, fgColor, bgColor]);
+
+  useEffect(() => {
+    if (!isInputValid()) {
+      setPreviewDataURL(null);
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      generatePreview();
+    }, 250);
+
+    return () => window.clearTimeout(timer);
+  }, [generatePreview, isInputValid]);
 
   const createTrackedQR = async () => {
     if (!isInputValid()) return;
@@ -84,7 +152,7 @@ export default function QRGenerator() {
       return;
     }
 
-    setGenerating(true);
+    setCreatingDynamic(true);
     try {
       const res = await fetch("/api/qr/generate", {
         method: "POST",
@@ -105,24 +173,60 @@ export default function QRGenerator() {
         return;
       }
 
-      setQrDataURL(json.dataURL);
+      setDynamicDataURL(json.dataURL);
       setShortCode(json.shortCode);
     } catch {
       alert("Erreur lors de la génération du QR code.");
     } finally {
-      setGenerating(false);
+      setCreatingDynamic(false);
     }
   };
 
-  const downloadPNG = () => {
-    if (!qrDataURL) return;
-    const link = document.createElement("a");
-    link.download = "leqr-code.png";
-    link.href = qrDataURL;
-    link.click();
+  const downloadStatic = async (format: "png" | "svg") => {
+    if (!isInputValid()) return;
+    if (format === "png") setDownloadingPng(true);
+    if (format === "svg") setDownloadingSvg(true);
+
+    try {
+      const res = await fetch("/api/qr/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          data: getQRData(),
+          fgColor,
+          bgColor,
+          size: 1000,
+          format,
+          tracked: false,
+        }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        alert(json.error || "Erreur lors du téléchargement.");
+        return;
+      }
+
+      if (format === "png" && json.dataURL) {
+        const link = document.createElement("a");
+        link.download = "leqr-statique.png";
+        link.href = json.dataURL;
+        link.click();
+      }
+
+      if (format === "svg" && json.svg) {
+        const blob = new Blob([json.svg], { type: "image/svg+xml" });
+        const link = document.createElement("a");
+        link.download = "leqr-statique.svg";
+        link.href = URL.createObjectURL(blob);
+        link.click();
+      }
+    } finally {
+      if (format === "png") setDownloadingPng(false);
+      if (format === "svg") setDownloadingSvg(false);
+    }
   };
 
-  const downloadSVG = async () => {
+  const downloadDynamicSVG = async () => {
     if (!shortCode) return;
 
     setDownloadingSvg(true);
@@ -145,7 +249,7 @@ export default function QRGenerator() {
       }
       const blob = new Blob([json.svg], { type: "image/svg+xml" });
       const link = document.createElement("a");
-      link.download = "leqr-code.svg";
+      link.download = "leqr-dynamique.svg";
       link.href = URL.createObjectURL(blob);
       link.click();
     } finally {
@@ -153,9 +257,15 @@ export default function QRGenerator() {
     }
   };
 
-  const handlePrimaryAction = async () => {
-    await createTrackedQR();
+  const downloadDynamicPNG = () => {
+    if (!dynamicDataURL) return;
+    const link = document.createElement("a");
+    link.download = "leqr-dynamique.png";
+    link.href = dynamicDataURL;
+    link.click();
   };
+
+  const displayedQRCode = dynamicDataURL || previewDataURL;
 
   return (
     <div className="w-full max-w-4xl mx-auto">
@@ -190,6 +300,42 @@ export default function QRGenerator() {
                 />
               )}
               {activeTab === 1 && (
+                <div className="space-y-3">
+                  <input
+                    type="text"
+                    value={wifiName}
+                    onChange={(e) => setWifiName(e.target.value)}
+                    placeholder="Nom du réseau"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-lg"
+                  />
+                  <input
+                    type="text"
+                    value={wifiPassword}
+                    onChange={(e) => setWifiPassword(e.target.value)}
+                    placeholder="Mot de passe"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-lg"
+                  />
+                  <select
+                    value={wifiSecurity}
+                    onChange={(e) => setWifiSecurity(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-lg bg-white"
+                  >
+                    <option value="WPA">WPA / WPA2</option>
+                    <option value="WEP">WEP</option>
+                    <option value="nopass">Aucun mot de passe</option>
+                  </select>
+                </div>
+              )}
+              {activeTab === 2 && (
+                <textarea
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                  placeholder="Votre texte"
+                  rows={4}
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-lg resize-none"
+                />
+              )}
+              {activeTab === 3 && (
                 <input
                   type="email"
                   value={email}
@@ -198,7 +344,7 @@ export default function QRGenerator() {
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-lg"
                 />
               )}
-              {activeTab === 2 && (
+              {activeTab === 4 && (
                 <input
                   type="tel"
                   value={phone}
@@ -237,37 +383,61 @@ export default function QRGenerator() {
             </div>
 
             <div className="space-y-3">
-              <button
-                onClick={handlePrimaryAction}
-                disabled={!isInputValid() || generating}
-                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white font-semibold py-3 px-4 rounded-xl transition-all shadow-md hover:shadow-lg"
-              >
-                {generating ? "Génération..." : "Générer mon QR code"}
-              </button>
-              {accessToken && qrDataURL && (
-                <div className="flex gap-3">
+              <div className="rounded-2xl border border-gray-100 bg-gray-50 p-4">
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900">
+                      QR statique gratuit
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      Sans compte. Idéal pour un lien fixe, du WiFi ou un texte.
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-4 flex gap-3">
                   <button
-                    onClick={downloadPNG}
-                    className="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold py-3 px-4 rounded-xl transition-all"
+                    onClick={() => downloadStatic("png")}
+                    disabled={!isInputValid() || downloadingPng}
+                    className="flex-1 bg-blue-50 hover:bg-blue-100 disabled:bg-gray-100 disabled:text-gray-400 text-blue-700 font-semibold py-3 px-4 rounded-xl transition-all"
                   >
-                    Télécharger PNG
+                    {downloadingPng ? "Export..." : "Télécharger PNG"}
                   </button>
                   <button
-                    onClick={downloadSVG}
-                    disabled={downloadingSvg}
+                    onClick={() => downloadStatic("svg")}
+                    disabled={!isInputValid() || downloadingSvg}
                     className="flex-1 bg-gray-800 hover:bg-gray-900 disabled:bg-gray-300 text-white font-semibold py-3 px-4 rounded-xl transition-all"
                   >
                     {downloadingSvg ? "Export..." : "Télécharger SVG"}
                   </button>
                 </div>
-              )}
+              </div>
+
+              <div className="rounded-2xl border-2 border-blue-600 p-4">
+                <p className="text-sm font-semibold text-blue-700">
+                  QR dynamique pour le print
+                </p>
+                <p className="mt-1 text-xs text-gray-600">
+                  Gratuit à la création. Créez votre QR via LeQR pour le suivre,
+                  le retrouver plus tard et l&apos;upgrader le jour où vous devez
+                  changer la destination sans réimprimer.
+                </p>
+                <button
+                  onClick={createTrackedQR}
+                  disabled={!isInputValid() || creatingDynamic}
+                  className="mt-4 w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white font-semibold py-3 px-4 rounded-xl transition-all shadow-md hover:shadow-lg"
+                >
+                  {creatingDynamic ? "Création..." : "Générer mon QR dynamique"}
+                </button>
+                <p className="mt-2 text-center text-xs text-gray-500">
+                  {accessToken
+                    ? "10 QR dynamiques gratuits avec votre compte, puis Pro si vous voulez modifier l'URL."
+                    : "Créez un compte seulement si vous voulez un QR dynamique enregistré dans votre espace."}
+                </p>
+              </div>
             </div>
 
             <p className="text-xs text-gray-400 mt-3 text-center">
-              10 QR codes gratuits, haute résolution, usage commercial autorisé
-            </p>
-            <p className="text-xs text-gray-500 mt-1 text-center">
-              Vos QR sont enregistrés dans votre espace pour être retrouvés et suivis.
+              PNG et SVG haute résolution, usage commercial autorisé
             </p>
           </div>
 
@@ -276,9 +446,9 @@ export default function QRGenerator() {
               className="w-64 h-64 rounded-2xl flex items-center justify-center bg-white shadow-inner border border-gray-100"
               style={{ backgroundColor: bgColor }}
             >
-              {qrDataURL ? (
+              {displayedQRCode ? (
                 <img
-                  src={qrDataURL}
+                  src={displayedQRCode}
                   alt="QR Code"
                   className="w-full h-full rounded-2xl object-contain p-2"
                 />
@@ -293,10 +463,11 @@ export default function QRGenerator() {
                     ))}
                   </div>
                   <p className="text-sm font-medium text-gray-500">
-                    {generating ? "Génération..." : "Votre QR code apparaîtra ici"}
+                    {previewLoading ? "Préparation..." : "Votre QR code apparaîtra ici"}
                   </p>
                   <p className="text-xs text-gray-400 mt-2">
-                    Personnalisez-le puis cliquez sur « Générer mon QR code ».
+                    Saisissez votre contenu pour voir l&apos;aperçu puis
+                    téléchargez le QR statique ou créez sa version dynamique.
                   </p>
                 </div>
               )}
@@ -305,7 +476,7 @@ export default function QRGenerator() {
             {shortCode ? (
               <div className="mt-6 text-center">
                 <div className="inline-flex items-center gap-2 bg-green-50 text-green-800 px-4 py-2 rounded-full text-sm font-medium border border-green-200">
-                  ✓ QR code créé
+                  ✓ QR dynamique créé
                 </div>
                 <p className="text-sm text-gray-600 mt-3">
                   Retrouvez ce QR dans{" "}
@@ -317,31 +488,37 @@ export default function QRGenerator() {
                   </a>
                   .
                 </p>
-                <p className="text-xs text-gray-400 mt-1">
+                <div className="mt-4 flex flex-wrap justify-center gap-3">
+                  <button
+                    onClick={downloadDynamicPNG}
+                    className="rounded-xl bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 transition-all hover:bg-blue-100"
+                  >
+                    PNG dynamique
+                  </button>
+                  <button
+                    onClick={downloadDynamicSVG}
+                    disabled={downloadingSvg}
+                    className="rounded-xl bg-gray-800 px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-gray-900 disabled:bg-gray-300"
+                  >
+                    {downloadingSvg ? "Export..." : "SVG dynamique"}
+                  </button>
+                </div>
+                <p className="text-xs text-gray-400 mt-3">
                   Besoin de modifier l&apos;URL après impression ?{" "}
                   <a href="#pricing" className="text-blue-600 hover:underline">
                     Passez en Pro
                   </a>
+                  .
                 </p>
               </div>
             ) : (
               <div className="mt-6 text-center">
                 <div className="inline-flex items-center gap-2 bg-amber-50 text-amber-800 px-4 py-2 rounded-full text-sm font-medium border border-amber-200">
-                  {accessToken ? "10 QR codes gratuits inclus" : "PNG HD, SVG et suivi inclus"}
+                  {previewDataURL ? "Aperçu statique prêt" : "Statique gratuit sans compte"}
                 </div>
                 <p className="text-xs text-gray-500 mt-2">
-                  {accessToken ? (
-                    <>
-                      <a href="#pricing" className="text-blue-600 hover:underline">
-                        Passez en Pro
-                      </a>{" "}
-                      pour modifier l&apos;URL après impression et retirer l&apos;overlay.
-                    </>
-                  ) : (
-                    <>
-                      Générez votre QR en 1 clic puis retrouvez-le dans votre espace.
-                    </>
-                  )}
+                  Le QR dynamique devient intéressant si vous imprimez des
+                  supports que vous ne voulez pas refaire plus tard.
                 </p>
               </div>
             )}

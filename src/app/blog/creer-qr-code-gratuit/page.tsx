@@ -1,7 +1,7 @@
 export const metadata = {
   title: "Comment Créer un QR Code Gratuit en 2026 — LeQR.fr",
   description:
-    "Guide étape par étape pour créer un QR code gratuit en haute résolution. Sans inscription, sans filigrane, en 30 secondes.",
+    "Guide étape par étape pour créer un QR code gratuit en haute résolution. QR statique sans compte, QR dynamique avec compte.",
 };
 
 export default function Article() {
@@ -31,8 +31,9 @@ export default function Article() {
 
         <h2>Étape 1 : Allez sur LeQR.fr</h2>
         <p>
-          Pas besoin de créer un compte. Pas besoin de télécharger une application.
-          Ouvrez simplement <a href="https://leqr.fr">leqr.fr</a> dans votre navigateur.
+          Pour un QR statique, pas besoin de créer un compte. Ouvrez simplement{" "}
+          <a href="https://leqr.fr">leqr.fr</a> dans votre navigateur. Si vous voulez
+          un QR dynamique enregistré dans votre espace, créez ensuite un compte.
         </p>
 
         <h2>Étape 2 : Choisissez le type de contenu</h2>
@@ -48,7 +49,7 @@ export default function Article() {
         <h2>Étape 3 : Entrez vos données</h2>
         <p>
           Collez votre URL, tapez votre texte, ou entrez les informations WiFi.
-          Le QR code se génère automatiquement en temps réel à droite de l&apos;écran.
+          LeQR affiche un aperçu avant téléchargement.
         </p>
 
         <h2>Étape 4 : Personnalisez (optionnel)</h2>
@@ -57,23 +58,26 @@ export default function Article() {
           8 couleurs prédéfinies + un sélecteur de couleur personnalisé.
         </p>
 
-        <h2>Étape 5 : Téléchargez</h2>
+        <h2>Étape 5 : Téléchargez votre QR statique</h2>
         <p>Deux formats disponibles :</p>
         <ul>
           <li><strong>PNG</strong> — idéal pour l&apos;impression et le web (haute résolution)</li>
           <li><strong>SVG</strong> — format vectoriel, redimensionnable sans perte de qualité</li>
         </ul>
 
-        <h2>C&apos;est tout ?</h2>
+        <h2>Et si vous avez besoin d&apos;un QR dynamique ?</h2>
         <p>
-          Oui, c&apos;est tout. Pas de filigrane &quot;Powered by...&quot;, pas de limite de téléchargement,
-          pas de pub intrusive. LeQR.fr est un outil simple et honnête, fait pour les
-          professionnels pressés.
+          Créez un compte gratuit pour enregistrer jusqu&apos;à 10 QR dynamiques,
+          suivre leur nombre total de scans et les garder dans votre dashboard.
+          Le plan Pro devient utile le jour où vous voulez modifier l&apos;URL après
+          impression ou retirer l&apos;overlay de redirection.
         </p>
 
         <div className="bg-blue-600 text-white rounded-2xl p-8 text-center not-prose mt-8">
           <h2 className="text-2xl font-bold mb-3">Prêt ?</h2>
-          <p className="text-blue-100 mb-6">Créez votre QR code maintenant. 30 secondes. Gratuit.</p>
+          <p className="text-blue-100 mb-6">
+            Créez votre QR code maintenant. Statique gratuit sans compte, dynamique avec compte.
+          </p>
           <a
             href="/"
             className="inline-block bg-white text-blue-600 font-bold px-8 py-3 rounded-xl hover:shadow-xl transition-all"

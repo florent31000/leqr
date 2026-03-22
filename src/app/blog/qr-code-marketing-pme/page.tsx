@@ -78,9 +78,10 @@ export default function Article() {
 
         <h2>Combien ça coûte ?</h2>
         <p>
-          Sur LeQR.fr, vous pouvez créer <strong>jusqu&apos;à 10 QR avec un compte gratuit</strong>.
-          Tous passent par nos serveurs. Pour modifier
-          l&apos;URL après impression et supprimer l&apos;overlay, le plan Pro est à 14,90€/mois.
+          Sur LeQR.fr, vous pouvez télécharger un <strong>QR statique gratuit sans compte</strong>
+          ou créer <strong>jusqu&apos;à 10 QR dynamiques gratuits avec compte</strong>.
+          Pour modifier l&apos;URL après impression et supprimer l&apos;overlay, le plan Pro
+          est à 14,90€/mois.
         </p>
 
         <div className="bg-blue-600 text-white rounded-2xl p-8 text-center not-prose mt-8">
@@ -88,7 +89,7 @@ export default function Article() {
             Lancez-vous
           </h2>
           <p className="text-blue-100 mb-6">
-            Créez votre premier QR code en 30 secondes. Gratuit.
+            Créez votre premier QR code en 30 secondes. Statique gratuit ou dynamique avec compte.
           </p>
           <a
             href="/"
