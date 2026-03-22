@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import ChatBot from "@/components/ChatBot";
 
 export const metadata: Metadata = {
   title: "LeQR.fr — Générateur de QR Codes Professionnel Gratuit",
@@ -13,6 +14,10 @@ export const metadata: Metadata = {
       "Générateur de QR codes professionnel français. Gratuit, simple, fiable.",
     type: "website",
     locale: "fr_FR",
+  },
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
   },
 };
 
@@ -29,7 +34,10 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        {children}
+        <ChatBot />
+      </body>
     </html>
   );
 }

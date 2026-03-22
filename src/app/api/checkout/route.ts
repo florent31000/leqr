@@ -29,12 +29,16 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { plan } = body;
+    const { plan, billing = "monthly" } = body;
 
-    const priceId =
-      plan === "business"
-        ? process.env.STRIPE_BUSINESS_PRICE_ID
-        : process.env.STRIPE_PRO_PRICE_ID;
+    const priceMap: Record<string, string | undefined> = {
+      "pro-monthly": process.env.STRIPE_PRO_PRICE_ID,
+      "pro-annual": process.env.STRIPE_PRO_ANNUAL_PRICE_ID,
+      "business-monthly": process.env.STRIPE_BUSINESS_PRICE_ID,
+      "business-annual": process.env.STRIPE_BUSINESS_ANNUAL_PRICE_ID,
+    };
+
+    const priceId = priceMap[`${plan}-${billing}`];
 
     if (!priceId) {
       return NextResponse.json(

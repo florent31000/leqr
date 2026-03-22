@@ -151,9 +151,9 @@ export default function Home() {
               </p>
             </div>
             <div className="bg-white/10 rounded-xl p-6 backdrop-blur-sm">
-              <h3 className="font-bold text-lg mb-2">💰 3x moins cher</h3>
+              <h3 className="font-bold text-lg mb-2">💰 40% moins cher</h3>
               <p className="text-blue-100 text-sm">
-                Notre plan Pro coûte 5.99€/mois. Le concurrent français le plus
+                Notre plan Pro coûte 9,99€/mois. Le concurrent français le plus
                 proche ? 17€/mois. On fait mieux pour moins.
               </p>
             </div>
@@ -217,13 +217,13 @@ export default function Home() {
                 Pour les professionnels
               </p>
               <div className="text-4xl font-extrabold mb-1">
-                5,99€
+                9,99€
                 <span className="text-base font-normal text-gray-400">
                   /mois
                 </span>
               </div>
               <p className="text-xs text-gray-400 mb-6">
-                ou 49,99€/an (3 mois offerts)
+                ou 89,91€/an (3 mois offerts)
               </p>
               <ul className="space-y-3 text-sm text-gray-600 mb-8">
                 {[
@@ -244,7 +244,7 @@ export default function Home() {
                 href="/inscription"
                 className="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-all shadow-md"
               >
-                Commencer l&apos;essai gratuit
+                Passer au Pro
               </a>
             </div>
 
@@ -255,10 +255,13 @@ export default function Home() {
                 Pour les équipes et agences
               </p>
               <div className="text-4xl font-extrabold mb-1">
-                Sur mesure
+                29,99€
+                <span className="text-base font-normal text-gray-400">
+                  /mois
+                </span>
               </div>
               <p className="text-xs text-gray-400 mb-6">
-                Contactez-nous pour un devis
+                ou 269,91€/an (3 mois offerts)
               </p>
               <ul className="space-y-3 text-sm text-gray-600 mb-8">
                 {[
@@ -275,10 +278,10 @@ export default function Home() {
                 ))}
               </ul>
               <a
-                href="mailto:contact@leqr.fr"
-                className="block w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-3 rounded-xl transition-all"
+                href="/inscription"
+                className="block w-full text-center bg-gray-900 hover:bg-gray-800 text-white font-semibold py-3 rounded-xl transition-all"
               >
-                Nous contacter
+                Choisir Business
               </a>
             </div>
           </div>

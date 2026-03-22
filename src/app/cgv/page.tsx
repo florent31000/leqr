@@ -31,7 +31,7 @@ export default function CGV() {
           <li>Téléchargement en PNG et SVG</li>
           <li>Suivi du nombre de scans</li>
         </ul>
-        <h3>Plan Pro (5,99€/mois ou 49,99€/an)</h3>
+        <h3>Plan Pro (9,99€/mois ou 89,91€/an)</h3>
         <ul>
           <li>QR codes dynamiques (modification de l&apos;URL après impression)</li>
           <li>50 QR codes dynamiques</li>
@@ -39,11 +39,12 @@ export default function CGV() {
           <li>Aucun overlay à la redirection</li>
           <li>Support prioritaire</li>
         </ul>
-        <h3>Plan Business (sur mesure)</h3>
+        <h3>Plan Business (29,99€/mois ou 269,91€/an)</h3>
         <ul>
+          <li>Tout du plan Pro</li>
           <li>QR codes dynamiques illimités</li>
           <li>Domaine court personnalisé</li>
-          <li>Création en masse</li>
+          <li>Création en masse (CSV)</li>
           <li>Support dédié</li>
         </ul>
 
