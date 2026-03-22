@@ -186,12 +186,12 @@ export default function Home() {
               </div>
               <ul className="space-y-3 text-sm text-gray-600 mb-8">
                 {[
-                  "QR statiques illimités",
+                  "QR codes illimités",
                   "Personnalisation couleurs",
                   "Téléchargement PNG & SVG",
-                  "3 QR dynamiques",
-                  "Analytics basiques (nb scans)",
-                  "Sans inscription pour les statiques",
+                  "Suivi du nombre de scans",
+                  "Sans inscription",
+                  "Usage commercial autorisé",
                 ].map((f) => (
                   <li key={f} className="flex gap-2">
                     <span className="text-green-500">✓</span>
@@ -228,11 +228,10 @@ export default function Home() {
               <ul className="space-y-3 text-sm text-gray-600 mb-8">
                 {[
                   "Tout du plan Gratuit",
+                  "QR dynamiques (modifier l'URL après impression)",
                   "50 QR dynamiques",
                   "Analytics complets (géo, device, temps)",
-                  "Logo dans le QR code",
-                  "Export haute résolution (PDF, EPS)",
-                  "Aucun overlay « Propulsé par »",
+                  "Aucun overlay à la redirection",
                   "Support prioritaire",
                 ].map((f) => (
                   <li key={f} className="flex gap-2">
@@ -256,22 +255,17 @@ export default function Home() {
                 Pour les équipes et agences
               </p>
               <div className="text-4xl font-extrabold mb-1">
-                14,99€
-                <span className="text-base font-normal text-gray-400">
-                  /mois
-                </span>
+                Sur mesure
               </div>
               <p className="text-xs text-gray-400 mb-6">
-                ou 129,99€/an
+                Contactez-nous pour un devis
               </p>
               <ul className="space-y-3 text-sm text-gray-600 mb-8">
                 {[
                   "Tout du plan Pro",
                   "QR dynamiques illimités",
                   "Domaine court personnalisé",
-                  "API REST complète",
                   "Création en masse (CSV)",
-                  "Gestion multi-utilisateurs",
                   "Support dédié",
                 ].map((f) => (
                   <li key={f} className="flex gap-2">
@@ -281,10 +275,10 @@ export default function Home() {
                 ))}
               </ul>
               <a
-                href="/inscription"
+                href="mailto:contact@leqr.fr"
                 className="block w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-3 rounded-xl transition-all"
               >
-                Commencer l&apos;essai gratuit
+                Nous contacter
               </a>
             </div>
           </div>
@@ -301,11 +295,15 @@ export default function Home() {
             {[
               {
                 q: "Est-ce vraiment gratuit ?",
-                a: "Oui. Les QR codes statiques sont 100% gratuits, sans limite, sans inscription et sans filigrane. Le plan Pro ajoute les QR dynamiques, les analytics et le logo personnalisé.",
+                a: "Oui. La génération de QR codes est 100% gratuite, sans limite, sans inscription et sans filigrane. Chaque QR code créé inclut le suivi du nombre de scans. Le plan Pro débloque les QR dynamiques (modification de l'URL après impression) et les analytics détaillés.",
               },
               {
-                q: "Quelle est la différence entre statique et dynamique ?",
-                a: "Un QR statique pointe toujours vers la même URL. Un QR dynamique passe par nos serveurs : vous pouvez changer la destination à tout moment, même après avoir imprimé le QR code.",
+                q: "Quelle est la différence entre gratuit et Pro ?",
+                a: "Avec le plan gratuit, votre QR code pointe vers l'URL que vous avez choisie, avec suivi des scans inclus. Avec le plan Pro, vous pouvez modifier l'URL de destination à tout moment — même après avoir imprimé vos flyers ou cartes de visite — et accéder aux analytics détaillés (géolocalisation, appareils, historique).",
+              },
+              {
+                q: "Puis-je rendre un QR gratuit en dynamique plus tard ?",
+                a: "Oui ! Tous les QR codes générés sur LeQR passent par nos serveurs. Si vous passez en Pro, vous pourrez modifier l'URL de destination de n'importe quel QR code que vous avez déjà créé et imprimé. Aucun besoin de refaire le QR code.",
               },
               {
                 q: "Que se passe-t-il si j'arrête de payer ?",

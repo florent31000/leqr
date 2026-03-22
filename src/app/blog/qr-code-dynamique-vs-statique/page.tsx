@@ -21,7 +21,7 @@ export default function Article() {
 
       <article className="max-w-3xl mx-auto px-4 py-16 prose prose-gray prose-lg">
         <h1>QR code dynamique vs statique : lequel choisir ?</h1>
-        <p className="text-gray-500 text-sm">14 mars 2026 · 5 min de lecture</p>
+        <p className="text-gray-500 text-sm">22 mars 2026 · 5 min de lecture</p>
 
         <p>
           Quand vous créez un QR code, vous avez deux options : statique ou dynamique.

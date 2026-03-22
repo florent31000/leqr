@@ -41,6 +41,7 @@ export default function QRGenerator() {
   const [fgColor, setFgColor] = useState("#000000");
   const [bgColor, setBgColor] = useState("#ffffff");
   const [qrDataURL, setQrDataURL] = useState<string | null>(null);
+  const [shortCode, setShortCode] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
 
   const getQRData = useCallback((): string => {
@@ -60,16 +61,36 @@ export default function QRGenerator() {
     }
   }, [activeTab, url, wifi, text, email, phone]);
 
-  const generateQR = useCallback(async () => {
+  const isInputValid = useCallback((): boolean => {
     const data = getQRData();
-    if (!data || data === "https://" || data === "mailto:" || data === "tel:") return;
+    if (!data) return false;
+    if (activeTab === 0 && (data === "https://" || data.length < 10)) return false;
+    if (activeTab === 1 && !wifi.ssid) return false;
+    if (activeTab === 2 && !text) return false;
+    if (activeTab === 3 && (data === "mailto:" || !email)) return false;
+    if (activeTab === 4 && (data === "tel:" || !phone)) return false;
+    return true;
+  }, [getQRData, activeTab, wifi.ssid, text, email, phone]);
 
+  // Live preview: generate a non-tracked QR for instant feedback
+  const generatePreview = useCallback(async () => {
+    if (!isInputValid()) {
+      setQrDataURL(null);
+      setShortCode(null);
+      return;
+    }
     setGenerating(true);
     try {
       const res = await fetch("/api/qr/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data, fgColor, bgColor, size: 400 }),
+        body: JSON.stringify({
+          data: getQRData(),
+          fgColor,
+          bgColor,
+          size: 400,
+          tracked: false,
+        }),
       });
       const json = await res.json();
       if (json.dataURL) setQrDataURL(json.dataURL);
@@ -78,25 +99,33 @@ export default function QRGenerator() {
     } finally {
       setGenerating(false);
     }
-  }, [getQRData, fgColor, bgColor]);
+  }, [isInputValid, getQRData, fgColor, bgColor]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      generateQR();
+      generatePreview();
     }, 400);
     return () => clearTimeout(timer);
-  }, [generateQR]);
+  }, [generatePreview]);
 
+  // Download: generate a tracked QR (goes through our servers)
   const downloadPNG = async () => {
-    const data = getQRData();
-    if (!data) return;
+    if (!isInputValid()) return;
     const res = await fetch("/api/qr/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ data, fgColor, bgColor, size: 1000, format: "png" }),
+      body: JSON.stringify({
+        data: getQRData(),
+        fgColor,
+        bgColor,
+        size: 1000,
+        format: "png",
+        tracked: true,
+      }),
     });
     const json = await res.json();
     if (!json.dataURL) return;
+    if (json.shortCode) setShortCode(json.shortCode);
     const link = document.createElement("a");
     link.download = "leqr-code.png";
     link.href = json.dataURL;
@@ -104,15 +133,21 @@ export default function QRGenerator() {
   };
 
   const downloadSVG = async () => {
-    const data = getQRData();
-    if (!data) return;
+    if (!isInputValid()) return;
     const res = await fetch("/api/qr/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ data, fgColor, bgColor, format: "svg" }),
+      body: JSON.stringify({
+        data: getQRData(),
+        fgColor,
+        bgColor,
+        format: "svg",
+        tracked: true,
+      }),
     });
     const json = await res.json();
     if (!json.svg) return;
+    if (json.shortCode) setShortCode(json.shortCode);
     const blob = new Blob([json.svg], { type: "image/svg+xml" });
     const link = document.createElement("a");
     link.download = "leqr-code.svg";
@@ -247,15 +282,17 @@ export default function QRGenerator() {
             <div className="flex gap-3">
               <button
                 onClick={downloadPNG}
-                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl transition-all shadow-md hover:shadow-lg"
+                disabled={!isInputValid()}
+                className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white font-semibold py-3 px-4 rounded-xl transition-all shadow-md hover:shadow-lg"
               >
-                ⬇ PNG
+                Télécharger PNG
               </button>
               <button
                 onClick={downloadSVG}
-                className="flex-1 bg-gray-800 hover:bg-gray-900 text-white font-semibold py-3 px-4 rounded-xl transition-all shadow-md hover:shadow-lg"
+                disabled={!isInputValid()}
+                className="flex-1 bg-gray-800 hover:bg-gray-900 disabled:bg-gray-300 text-white font-semibold py-3 px-4 rounded-xl transition-all shadow-md hover:shadow-lg"
               >
-                ⬇ SVG
+                Télécharger SVG
               </button>
             </div>
 
@@ -288,18 +325,32 @@ export default function QRGenerator() {
               )}
             </div>
 
-            {/* Dynamic QR CTA */}
-            <div className="mt-6 text-center">
-              <div className="inline-flex items-center gap-2 bg-amber-50 text-amber-800 px-4 py-2 rounded-full text-sm font-medium border border-amber-200">
-                ⚡ QR dynamique = modifiable après impression
+            {/* Post-download info */}
+            {shortCode ? (
+              <div className="mt-6 text-center">
+                <div className="inline-flex items-center gap-2 bg-green-50 text-green-800 px-4 py-2 rounded-full text-sm font-medium border border-green-200">
+                  ✓ QR code créé — scans trackés automatiquement
+                </div>
+                <p className="text-xs text-gray-500 mt-2">
+                  Besoin de modifier l&apos;URL après impression ?{" "}
+                  <a href="#pricing" className="text-blue-600 hover:underline">
+                    Passez en Pro
+                  </a>
+                </p>
               </div>
-              <p className="text-xs text-gray-500 mt-2">
-                <a href="#pricing" className="text-blue-600 hover:underline">
-                  Passez en Pro
-                </a>{" "}
-                pour des QR codes dynamiques + analytics
-              </p>
-            </div>
+            ) : (
+              <div className="mt-6 text-center">
+                <div className="inline-flex items-center gap-2 bg-amber-50 text-amber-800 px-4 py-2 rounded-full text-sm font-medium border border-amber-200">
+                  ⚡ QR dynamique = modifiable après impression
+                </div>
+                <p className="text-xs text-gray-500 mt-2">
+                  <a href="#pricing" className="text-blue-600 hover:underline">
+                    Passez en Pro
+                  </a>{" "}
+                  pour modifier vos QR codes après impression
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>

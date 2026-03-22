@@ -10,7 +10,7 @@ const articles = [
     title: "QR code dynamique vs statique : lequel choisir ?",
     excerpt:
       "Comprendre la différence fondamentale entre QR codes statiques et dynamiques, et quand utiliser chacun.",
-    date: "14 mars 2026",
+    date: "22 mars 2026",
     readTime: "5 min",
   },
   {
@@ -18,7 +18,7 @@ const articles = [
     title: "Comment créer un QR code gratuit en 2026",
     excerpt:
       "Guide étape par étape pour créer votre premier QR code professionnel gratuitement, sans inscription.",
-    date: "14 mars 2026",
+    date: "18 mars 2026",
     readTime: "3 min",
   },
   {
@@ -26,7 +26,7 @@ const articles = [
     title: "7 façons d'utiliser les QR codes pour votre PME",
     excerpt:
       "Cartes de visite, flyers, vitrine, packaging : découvrez comment les QR codes boostent votre business.",
-    date: "14 mars 2026",
+    date: "15 mars 2026",
     readTime: "6 min",
   },
 ];

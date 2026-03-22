@@ -21,7 +21,7 @@ export default function Article() {
 
       <article className="max-w-3xl mx-auto px-4 py-16 prose prose-gray prose-lg">
         <h1>Comment créer un QR code gratuit en 2026</h1>
-        <p className="text-gray-500 text-sm">14 mars 2026 · 3 min de lecture</p>
+        <p className="text-gray-500 text-sm">18 mars 2026 · 3 min de lecture</p>
 
         <p>
           Vous avez besoin d&apos;un QR code pour votre carte de visite, votre flyer ou votre

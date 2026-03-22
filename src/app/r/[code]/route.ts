@@ -32,6 +32,7 @@ export async function GET(
     return NextResponse.redirect("https://leqr.fr?error=not_found");
   }
 
+  // Log the scan
   const ip =
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
     req.headers.get("x-real-ip") ||
@@ -48,18 +49,25 @@ export async function GET(
     referer,
   });
 
-  // Check if user has active Pro subscription
-  const { data: sub } = await supabase
-    .from("subscriptions")
-    .select("plan, status")
-    .eq("user_id", qr.user_id)
-    .single();
+  // Determine if user has Pro subscription
+  let isPro = false;
+  if (qr.user_id) {
+    const { data: sub } = await supabase
+      .from("subscriptions")
+      .select("plan, status")
+      .eq("user_id", qr.user_id)
+      .single();
 
-  const isPro =
-    sub && (sub.plan === "pro" || sub.plan === "business") && sub.status === "active";
+    isPro =
+      !!sub &&
+      (sub.plan === "pro" || sub.plan === "business") &&
+      sub.status === "active";
+  }
 
+  // Anonymous QR codes (from free generator) or free users with dynamic QR:
+  // show a brief overlay before redirecting
   if (!isPro && qr.is_dynamic) {
-    // Show overlay page for free users with dynamic QR
+    const safeUrl = qr.target_url.replace(/"/g, '\\"');
     const overlayHtml = `<!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -85,7 +93,7 @@ export async function GET(
     <div class="bar"><div class="fill"></div></div>
     <p style="margin-top:1rem"><a href="https://leqr.fr">Créez vos QR codes gratuitement</a></p>
   </div>
-  <script>setTimeout(()=>location.href="${qr.target_url.replace(/"/g, '\\"')}",3000);</script>
+  <script>setTimeout(()=>location.href="${safeUrl}",3000);</script>
 </body>
 </html>`;
     return new NextResponse(overlayHtml, {
@@ -93,5 +101,6 @@ export async function GET(
     });
   }
 
+  // Free/anonymous non-dynamic QR codes: redirect immediately (no overlay)
   return NextResponse.redirect(qr.target_url);
 }

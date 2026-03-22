@@ -26,25 +26,25 @@ export default function CGV() {
         <h2>2. Services proposés</h2>
         <h3>Plan Gratuit</h3>
         <ul>
-          <li>Génération illimitée de QR codes statiques</li>
+          <li>Génération illimitée de QR codes</li>
           <li>Personnalisation des couleurs</li>
           <li>Téléchargement en PNG et SVG</li>
-          <li>3 QR codes dynamiques</li>
+          <li>Suivi du nombre de scans</li>
         </ul>
         <h3>Plan Pro (5,99€/mois ou 49,99€/an)</h3>
         <ul>
+          <li>QR codes dynamiques (modification de l&apos;URL après impression)</li>
           <li>50 QR codes dynamiques</li>
-          <li>Analytics complets</li>
-          <li>Logo dans le QR code</li>
-          <li>Export haute résolution</li>
+          <li>Analytics complets (géolocalisation, appareil, historique)</li>
+          <li>Aucun overlay à la redirection</li>
           <li>Support prioritaire</li>
         </ul>
-        <h3>Plan Business (14,99€/mois ou 129,99€/an)</h3>
+        <h3>Plan Business (sur mesure)</h3>
         <ul>
           <li>QR codes dynamiques illimités</li>
-          <li>API REST</li>
+          <li>Domaine court personnalisé</li>
           <li>Création en masse</li>
-          <li>Gestion multi-utilisateurs</li>
+          <li>Support dédié</li>
         </ul>
 
         <h2>3. Tarifs et paiement</h2>

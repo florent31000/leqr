@@ -21,7 +21,7 @@ export default function Article() {
 
       <article className="max-w-3xl mx-auto px-4 py-16 prose prose-gray prose-lg">
         <h1>7 façons d&apos;utiliser les QR codes pour votre PME</h1>
-        <p className="text-gray-500 text-sm">14 mars 2026 · 6 min de lecture</p>
+        <p className="text-gray-500 text-sm">15 mars 2026 · 6 min de lecture</p>
 
         <p>
           Les QR codes ne sont pas réservés aux grandes entreprises. Voici 7 manières

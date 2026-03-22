@@ -6,7 +6,7 @@
 -- QR Codes table
 CREATE TABLE qr_codes (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE DEFAULT NULL,
   short_code VARCHAR(12) UNIQUE NOT NULL,
   target_url TEXT NOT NULL,
   label VARCHAR(255),
@@ -70,11 +70,11 @@ ALTER TABLE qr_codes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE scans ENABLE ROW LEVEL SECURITY;
 ALTER TABLE subscriptions ENABLE ROW LEVEL SECURITY;
 
--- Policies: users can only see their own data
+-- QR codes: users see their own, anonymous QR are accessible via service role only
 CREATE POLICY "Users can view own QR codes" ON qr_codes
   FOR SELECT USING (auth.uid() = user_id);
 CREATE POLICY "Users can insert own QR codes" ON qr_codes
-  FOR INSERT WITH CHECK (auth.uid() = user_id);
+  FOR INSERT WITH CHECK (auth.uid() = user_id OR user_id IS NULL);
 CREATE POLICY "Users can update own QR codes" ON qr_codes
   FOR UPDATE USING (auth.uid() = user_id);
 CREATE POLICY "Users can delete own QR codes" ON qr_codes
