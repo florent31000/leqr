@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
         .single();
 
       const plan = sub?.plan || "free";
-      const limits: Record<string, number> = { free: 3, pro: 50, business: 9999 };
+      const limits: Record<string, number> = { free: 0, pro: 50, business: 9999 };
       const limit = limits[plan] ?? 3;
 
       if ((count ?? 0) >= limit) {

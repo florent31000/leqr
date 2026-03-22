@@ -44,7 +44,12 @@ export async function POST(req: NextRequest) {
 
     const priceId = sub.items.data[0]?.price?.id;
     let plan = "pro";
-    if (priceId === process.env.STRIPE_BUSINESS_PRICE_ID) plan = "business";
+    if (
+      priceId === process.env.STRIPE_BUSINESS_PRICE_ID ||
+      priceId === process.env.STRIPE_BUSINESS_ANNUAL_PRICE_ID
+    ) {
+      plan = "business";
+    }
 
     await supabase.from("subscriptions").upsert({
       user_id: userId,

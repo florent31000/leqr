@@ -8,9 +8,12 @@ export default function Home() {
       {/* Nav */}
       <nav className="border-b border-gray-100 bg-white/80 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-          <a href="/" className="text-xl font-extrabold text-gray-900">
-            Le<span className="text-blue-600">QR</span>
-            <span className="text-xs text-gray-400 ml-1">.fr</span>
+          <a href="/" className="flex items-center gap-2">
+            <img src="/logo.png" alt="LeQR" className="h-8 w-8 rounded-lg" />
+            <span className="text-xl font-extrabold text-gray-900">
+              Le<span className="text-blue-600">QR</span>
+              <span className="text-xs text-gray-400 ml-1">.fr</span>
+            </span>
           </a>
           <div className="flex items-center gap-6">
             <a

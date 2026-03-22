@@ -41,5 +41,6 @@ export type Scan = {
   country: string | null;
   city: string | null;
   device: string | null;
+  referer: string | null;
   scanned_at: string;
 };
