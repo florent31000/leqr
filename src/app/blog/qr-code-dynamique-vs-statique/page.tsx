@@ -35,7 +35,7 @@ export default function Article() {
         </p>
         <p><strong>Avantages :</strong></p>
         <ul>
-          <li>Gratuit et illimité sur LeQR.fr</li>
+          <li>Accessible très rapidement sur LeQR.fr</li>
           <li>Fonctionne même sans connexion internet (pour les données texte/WiFi)</li>
           <li>Aucune dépendance à un service tiers</li>
           <li>Pas besoin de compte</li>
@@ -63,7 +63,7 @@ export default function Article() {
         <ul>
           <li>Nécessite un compte</li>
           <li>Dépend du service LeQR.fr (mais chez nous, vos QR ne meurent jamais)</li>
-          <li>Fonctionnalité réservée aux plans Pro et Business</li>
+          <li>Modification de destination réservée au plan Pro</li>
         </ul>
 
         <h2>Quand utiliser chaque type ?</h2>
@@ -112,7 +112,7 @@ export default function Article() {
 
         <div className="bg-blue-600 text-white rounded-2xl p-8 text-center not-prose mt-8">
           <h2 className="text-2xl font-bold mb-3">Essayez les deux</h2>
-          <p className="text-blue-100 mb-6">QR gratuits via LeQR. Modification d&apos;URL dès 9,99€/mois.</p>
+          <p className="text-blue-100 mb-6">Compte gratuit requis, jusqu&apos;à 10 QR inclus. Modification d&apos;URL dès 14,90€/mois.</p>
           <a
             href="/"
             className="inline-block bg-white text-blue-600 font-bold px-8 py-3 rounded-xl hover:shadow-xl transition-all"

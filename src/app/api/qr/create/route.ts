@@ -38,18 +38,21 @@ export async function POST(req: NextRequest) {
 
     const { data: sub } = await supabase
       .from("subscriptions")
-      .select("plan")
+      .select("plan, status")
       .eq("user_id", user.id)
       .single();
 
-    const plan = sub?.plan || "free";
-    const limits: Record<string, number> = { free: 0, pro: 50, business: 9999 };
+    const plan = sub?.status === "active" ? sub.plan || "free" : "free";
+    const limits: Record<string, number> = { free: 10, pro: 50, business: 9999 };
     const limit = limits[plan] ?? 0;
 
     if ((count ?? 0) >= limit) {
       return NextResponse.json(
         {
-          error: `Limite de QR modifiables atteinte (${limit}). Passez au plan supérieur.`,
+          error:
+            plan === "free"
+              ? `Limite du plan gratuit atteinte (${limit} QR). Passez en Pro pour gérer jusqu'à 50 QR modifiables.`
+              : `Limite atteinte (${limit} QR).`,
         },
         { status: 403 }
       );

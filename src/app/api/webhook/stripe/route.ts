@@ -43,12 +43,16 @@ export async function POST(req: NextRequest) {
     };
 
     const priceId = sub.items.data[0]?.price?.id;
-    let plan = "pro";
-    if (
-      priceId === process.env.STRIPE_BUSINESS_PRICE_ID ||
-      priceId === process.env.STRIPE_BUSINESS_ANNUAL_PRICE_ID
-    ) {
-      plan = "business";
+    let plan = session.metadata?.plan || "pro";
+    if (!session.metadata?.plan) {
+      if (
+        priceId === process.env.STRIPE_BUSINESS_PRICE_ID ||
+        priceId === process.env.STRIPE_BUSINESS_ANNUAL_PRICE_ID
+      ) {
+        plan = "business";
+      } else {
+        plan = "pro";
+      }
     }
 
     await supabase.from("subscriptions").upsert({

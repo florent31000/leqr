@@ -31,21 +31,26 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { plan, billing = "monthly" } = body;
 
-    const priceMap: Record<string, string | undefined> = {
-      "pro-monthly": process.env.STRIPE_PRO_PRICE_ID,
-      "pro-annual": process.env.STRIPE_PRO_ANNUAL_PRICE_ID,
-      "business-monthly": process.env.STRIPE_BUSINESS_PRICE_ID,
-      "business-annual": process.env.STRIPE_BUSINESS_ANNUAL_PRICE_ID,
-    };
-
-    const priceId = priceMap[`${plan}-${billing}`];
-
-    if (!priceId) {
+    if (plan !== "pro" || !["monthly", "annual"].includes(billing)) {
       return NextResponse.json(
         { error: "Plan non configuré" },
         { status: 400 }
       );
     }
+
+    const offer = billing === "annual"
+      ? {
+          unit_amount: 14900,
+          interval: "year" as const,
+          name: "LeQR Pro Annuel",
+          description: "50 QR modifiables, analytics détaillés, redirection instantanée, sans overlay.",
+        }
+      : {
+          unit_amount: 1490,
+          interval: "month" as const,
+          name: "LeQR Pro Mensuel",
+          description: "50 QR modifiables, analytics détaillés, redirection instantanée, sans overlay.",
+        };
 
     let customerId: string | undefined;
     const { data: sub } = await supabase
@@ -63,10 +68,24 @@ export async function POST(req: NextRequest) {
       mode: "subscription",
       customer: customerId,
       customer_email: customerId ? undefined : user.email,
-      line_items: [{ price: priceId, quantity: 1 }],
+      line_items: [
+        {
+          price_data: {
+            currency: "eur",
+            unit_amount: offer.unit_amount,
+            recurring: { interval: offer.interval },
+            product_data: {
+              name: offer.name,
+              description: offer.description,
+            },
+          },
+          quantity: 1,
+        },
+      ],
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?upgraded=true`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`,
-      metadata: { user_id: user.id },
+      metadata: { user_id: user.id, plan, billing },
+      allow_promotion_codes: true,
     });
 
     return NextResponse.json({ url: session.url });

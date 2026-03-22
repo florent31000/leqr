@@ -74,7 +74,7 @@ export default function QRCodeCarteVisite() {
 
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-2xl p-8 text-center">
           <h2 className="text-2xl font-bold mb-3">Prêt à créer votre QR code ?</h2>
-          <p className="text-blue-100 mb-6">Gratuit, sans inscription, haute résolution.</p>
+          <p className="text-blue-100 mb-6">Compte gratuit requis, puis jusqu&apos;à 10 QR inclus.</p>
           <a
             href="/"
             className="inline-block bg-white text-blue-600 font-bold px-8 py-3 rounded-xl hover:shadow-xl transition-all"

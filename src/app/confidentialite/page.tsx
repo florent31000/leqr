@@ -18,10 +18,10 @@ export default function Confidentialite() {
         <p>Dernière mise à jour : mars 2026</p>
 
         <h2>Données collectées</h2>
-        <h3>Utilisateurs non inscrits</h3>
+        <h3>Visiteurs non inscrits</h3>
         <p>
-          Aucune donnée personnelle nominative n&apos;est collectée pour la génération de QR codes
-          sans compte. Aucune inscription n&apos;est requise.
+          Nous ne générons pas de QR code téléchargeable sans compte. Un visiteur non inscrit peut
+          seulement consulter le site et préparer sa saisie avant création de compte.
         </p>
 
         <h3>Utilisateurs inscrits</h3>

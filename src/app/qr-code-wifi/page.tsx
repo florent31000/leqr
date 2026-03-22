@@ -90,7 +90,7 @@ export default function QRCodeWifi() {
             Créez votre QR code WiFi maintenant
           </h2>
           <p className="text-blue-100 mb-6">
-            Gratuit, sans inscription, prêt à imprimer en 30 secondes.
+            Compte gratuit requis, puis jusqu&apos;à 10 QR inclus.
           </p>
           <a
             href="/"

@@ -63,7 +63,7 @@ export default function Home() {
       <section id="generator" className="pt-16 pb-8 px-4">
         <div className="max-w-3xl mx-auto text-center mb-10">
           <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-1.5 rounded-full text-sm font-medium mb-6 border border-blue-100">
-            🇫🇷 100% français — gratuit — sans inscription
+            🇫🇷 100% français — 10 QR gratuits avec compte
           </div>
           <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 leading-tight">
             Créez votre QR Code
@@ -71,8 +71,9 @@ export default function Home() {
             <span className="text-blue-600">professionnel en 30s</span>
           </h1>
           <p className="text-lg text-gray-500 max-w-xl mx-auto">
-            Gratuit, sans filigrane, sans inscription. Téléchargez en haute
-            résolution pour vos cartes de visite, flyers, menus et affiches.
+            Créez un compte gratuit et gérez jusqu&apos;à 10 QR dans votre espace.
+            Téléchargez en haute résolution pour vos cartes de visite, flyers,
+            menus et affiches.
           </p>
         </div>
 
@@ -83,10 +84,10 @@ export default function Home() {
       <section className="py-8 px-4 border-y border-gray-100 bg-white">
         <div className="max-w-4xl mx-auto flex flex-wrap justify-center gap-8 text-center">
           {[
-            { num: "Gratuit", label: "QR via LeQR illimités" },
-            { num: "HD", label: "Haute résolution sans filigrane" },
-            { num: "0 pub", label: "Aucune publicité" },
-            { num: "RGPD", label: "Données hébergées en France" },
+            { num: "10", label: "QR avec compte gratuit" },
+            { num: "Pro", label: "50 QR modifiables" },
+            { num: "HD", label: "PNG et SVG sans filigrane" },
+            { num: "RGPD", label: "Données hébergées en Europe" },
           ].map((item) => (
             <div key={item.label} className="flex flex-col items-center">
               <span className="text-2xl font-bold text-blue-600">
@@ -109,32 +110,32 @@ export default function Home() {
               {
                 icon: "⚡",
                 title: "Rapide",
-                desc: "Générez votre QR code en moins de 30 secondes. Collez votre URL, personnalisez, téléchargez.",
+                desc: "Créez un QR propre en moins de 30 secondes. Collez votre URL, personnalisez, téléchargez.",
               },
               {
                 icon: "🎨",
-                title: "Personnalisable",
-                desc: "Choisissez vos couleurs pour un QR code qui reflète votre marque. Export PNG et SVG.",
+                title: "Dashboard gratuit",
+                desc: "Créez un compte gratuit pour conserver jusqu'à 10 QR, les re-télécharger et suivre leur activité.",
               },
               {
                 icon: "📶",
                 title: "Multi-usage",
-                desc: "URL, WiFi, carte de visite, email, téléphone — un QR code pour chaque besoin.",
+                desc: "URL, WiFi, carte de visite, email, téléphone : un QR code pour chaque besoin courant.",
               },
               {
                 icon: "🔄",
-                title: "QR Dynamiques",
-                desc: "Modifiez la destination après impression. Vos flyers restent à jour, toujours.",
+                title: "QR via LeQR",
+                desc: "Tous les QR passent par nos serveurs pour rester activables et évolutifs sans réimpression.",
               },
               {
                 icon: "📊",
                 title: "Analytics",
-                desc: "Suivez le nombre de scans, les appareils, la géolocalisation. Mesurez vos campagnes.",
+                desc: "Le gratuit donne le nombre total de scans. Le Pro ajoute le détail par appareil, source et historique.",
               },
               {
                 icon: "🛡️",
                 title: "Fiable et honnête",
-                desc: "Vos QR codes ne meurent jamais. Pas de piège à l'abonnement, pas de scans limités.",
+                desc: "Vos QR codes ne meurent jamais. Si vous arrêtez Pro, ils reviennent vers leur URL initiale.",
               },
             ].map((f) => (
               <div
@@ -175,10 +176,10 @@ export default function Home() {
               </p>
             </div>
             <div className="bg-white/10 rounded-xl p-6 backdrop-blur-sm">
-              <h3 className="font-bold text-lg mb-2">💰 Le moins cher du marché</h3>
+              <h3 className="font-bold text-lg mb-2">💰 Prix net et lisible</h3>
               <p className="text-blue-100 text-sm">
-                Notre plan Pro à 9,99€/mois est le plus compétitif du marché
-                français. Des QR codes pro sans se ruiner.
+                LeQR Pro à 14,90€/mois vise un meilleur rapport qualité-prix
+                que les offres françaises autour de 16€/mois.
               </p>
             </div>
           </div>
@@ -192,10 +193,10 @@ export default function Home() {
             Des tarifs simples et honnêtes
           </h2>
           <p className="text-gray-500 text-center mb-12">
-            Commencez gratuitement, passez en Pro quand vous êtes prêt.
+            Créez un compte gratuit, puis passez en Pro quand vous êtes prêt.
           </p>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
             {/* Free */}
             <div className="bg-white border border-gray-200 rounded-2xl p-8">
               <h3 className="text-lg font-bold mb-1">Gratuit</h3>
@@ -210,11 +211,12 @@ export default function Home() {
               </div>
               <ul className="space-y-3 text-sm text-gray-600 mb-8">
                 {[
-                  "QR codes illimités",
+                  "Compte gratuit requis",
+                  "10 QR avec compte gratuit",
                   "Personnalisation couleurs",
                   "Téléchargement PNG & SVG",
-                  "Suivi du nombre de scans",
-                  "Sans inscription",
+                  "Dashboard pour retrouver vos QR",
+                  "Suivi du nombre total de scans",
                   "Usage commercial autorisé",
                 ].map((f) => (
                   <li key={f} className="flex gap-2">
@@ -241,21 +243,21 @@ export default function Home() {
                 Pour les professionnels
               </p>
               <div className="text-4xl font-extrabold mb-1">
-                9,99€
+                14,90€
                 <span className="text-base font-normal text-gray-400">
                   /mois
                 </span>
               </div>
               <p className="text-xs text-gray-400 mb-6">
-                ou 89,91€/an (3 mois offerts)
+                ou 149€/an (2 mois offerts)
               </p>
               <ul className="space-y-3 text-sm text-gray-600 mb-8">
                 {[
                   "Tout du plan Gratuit",
                   "Modifier l'URL après impression",
                   "50 QR modifiables",
-                  "Analytics complets (géo, device, temps)",
-                  "Aucun overlay à la redirection",
+                  "Analytics détaillés (source, appareil, historique)",
+                  "Redirection instantanée sans overlay",
                   "Support prioritaire",
                 ].map((f) => (
                   <li key={f} className="flex gap-2">
@@ -269,43 +271,6 @@ export default function Home() {
                 className="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-all shadow-md"
               >
                 Passer au Pro
-              </a>
-            </div>
-
-            {/* Business */}
-            <div className="bg-white border border-gray-200 rounded-2xl p-8">
-              <h3 className="text-lg font-bold mb-1">Business</h3>
-              <p className="text-gray-500 text-sm mb-6">
-                Pour les équipes et agences
-              </p>
-              <div className="text-4xl font-extrabold mb-1">
-                29,99€
-                <span className="text-base font-normal text-gray-400">
-                  /mois
-                </span>
-              </div>
-              <p className="text-xs text-gray-400 mb-6">
-                ou 269,91€/an (3 mois offerts)
-              </p>
-              <ul className="space-y-3 text-sm text-gray-600 mb-8">
-                {[
-                  "Tout du plan Pro",
-                  "QR modifiables illimités",
-                  "Domaine court personnalisé",
-                  "Création en masse (CSV)",
-                  "Support dédié",
-                ].map((f) => (
-                  <li key={f} className="flex gap-2">
-                    <span className="text-purple-500">✓</span>
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              <a
-                href="/inscription"
-                className="block w-full text-center bg-gray-900 hover:bg-gray-800 text-white font-semibold py-3 rounded-xl transition-all"
-              >
-                Choisir Business
               </a>
             </div>
           </div>
@@ -322,15 +287,15 @@ export default function Home() {
             {[
               {
                 q: "Est-ce vraiment gratuit ?",
-                a: "Oui. La génération de QR codes est 100% gratuite, sans limite, sans inscription et sans filigrane. Tous les QR passent par nos serveurs. Le plan Pro débloque la modification de l'URL après impression et les analytics détaillés.",
+                a: "Oui. Vous pouvez créer jusqu'à 10 QR avec un compte gratuit, sans filigrane. Tous les QR passent par nos serveurs. Le plan Pro débloque la modification de l'URL après impression et les analytics détaillés.",
               },
               {
                 q: "Quelle est la différence entre gratuit et Pro ?",
-                a: "Avec le plan gratuit, votre QR code pointe vers l'URL que vous avez choisie, avec suivi des scans inclus. Avec le plan Pro, vous pouvez modifier l'URL de destination à tout moment — même après avoir imprimé vos flyers ou cartes de visite — et accéder aux analytics détaillés (géolocalisation, appareils, historique).",
+                a: "Avec le plan gratuit, vous créez jusqu'à 10 QR dans votre espace, avec téléchargement PNG/SVG et suivi du nombre total de scans. Avec le plan Pro, vous pouvez modifier l'URL de destination à tout moment, retirer l'overlay de redirection et accéder aux analytics détaillés (appareils, source, historique).",
               },
               {
                 q: "Puis-je rendre un QR gratuit en dynamique plus tard ?",
-                a: "Oui ! Tous les QR codes générés sur LeQR passent par nos serveurs. Si vous passez en Pro, vous pourrez modifier l'URL de destination de n'importe quel QR code que vous avez déjà créé et imprimé. Aucun besoin de refaire le QR code.",
+                a: "Oui. Tous les QR codes générés sur LeQR passent par nos serveurs. Si vous passez en Pro, vous pourrez modifier l'URL de destination de n'importe quel QR code déjà créé et imprimé. Aucun besoin de refaire le QR code.",
               },
               {
                 q: "Que se passe-t-il si j'arrête de payer ?",
@@ -338,7 +303,7 @@ export default function Home() {
               },
               {
                 q: "Puis-je utiliser les QR codes à des fins commerciales ?",
-                a: "Absolument. Tous les QR codes générés sur LeQR sont libres de droits pour un usage commercial : affiches, flyers, cartes de visite, emballages, etc.",
+                a: "Absolument. Tous les QR codes générés sur LeQR sont libres de droits pour un usage commercial : affiches, flyers, cartes de visite, emballages, menus, etc.",
               },
               {
                 q: "Mes données sont-elles en sécurité ?",
@@ -370,7 +335,7 @@ export default function Home() {
           Prêt à créer votre QR code ?
         </h2>
         <p className="text-blue-100 mb-8">
-          Gratuit, sans inscription, en 30 secondes.
+          10 QR gratuits avec compte, puis Pro pour aller plus loin.
         </p>
         <a
           href="#"

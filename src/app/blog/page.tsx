@@ -17,7 +17,7 @@ const articles = [
     slug: "creer-qr-code-gratuit",
     title: "Comment créer un QR code gratuit en 2026",
     excerpt:
-      "Guide étape par étape pour créer votre premier QR code professionnel gratuitement, sans inscription.",
+      "Guide étape par étape pour créer votre premier QR code professionnel gratuitement avec un compte.",
     date: "18 mars 2026",
     readTime: "3 min",
   },

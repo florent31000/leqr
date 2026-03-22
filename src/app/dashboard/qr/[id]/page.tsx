@@ -238,7 +238,7 @@ export default function QRDetailPage({
                   {qr.label || "Sans nom"}
                 </h1>
                 <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-green-50 text-green-700">
-                  {isPro ? "Modifiable" : "Via LeQR"}
+                  {isPro ? "Modifiable" : "Gratuit"}
                 </span>
               </div>
 
@@ -333,46 +333,64 @@ export default function QRDetailPage({
 
         {/* Stats Grid */}
         <div className="grid md:grid-cols-2 gap-6 mb-6">
-          {/* Device Breakdown */}
           <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
-            <h2 className="font-semibold mb-4">Appareils</h2>
-            {Object.keys(deviceBreakdown).length === 0 ? (
-              <p className="text-sm text-gray-400">Aucun scan pour le moment</p>
+            <h2 className="font-semibold mb-4">
+              {isPro ? "Appareils" : "Analytics détaillés"}
+            </h2>
+            {isPro ? (
+              Object.keys(deviceBreakdown).length === 0 ? (
+                <p className="text-sm text-gray-400">Aucun scan pour le moment</p>
+              ) : (
+                <div className="space-y-3">
+                  {Object.entries(deviceBreakdown)
+                    .sort(([, a], [, b]) => b - a)
+                    .map(([device, count]) => {
+                      const pct =
+                        totalScans > 0
+                          ? Math.round((count / totalScans) * 100)
+                          : 0;
+                      const icon =
+                        device === "mobile"
+                          ? "📱"
+                          : device === "tablet"
+                            ? "📲"
+                            : "💻";
+                      return (
+                        <div key={device}>
+                          <div className="flex justify-between text-sm mb-1">
+                            <span>
+                              {icon}{" "}
+                              {device.charAt(0).toUpperCase() + device.slice(1)}
+                            </span>
+                            <span className="font-medium">
+                              {count} ({pct}%)
+                            </span>
+                          </div>
+                          <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-blue-500 rounded-full transition-all"
+                              style={{ width: `${pct}%` }}
+                            />
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
+              )
             ) : (
-              <div className="space-y-3">
-                {Object.entries(deviceBreakdown)
-                  .sort(([, a], [, b]) => b - a)
-                  .map(([device, count]) => {
-                    const pct =
-                      totalScans > 0
-                        ? Math.round((count / totalScans) * 100)
-                        : 0;
-                    const icon =
-                      device === "mobile"
-                        ? "📱"
-                        : device === "tablet"
-                          ? "📲"
-                          : "💻";
-                    return (
-                      <div key={device}>
-                        <div className="flex justify-between text-sm mb-1">
-                          <span>
-                            {icon}{" "}
-                            {device.charAt(0).toUpperCase() + device.slice(1)}
-                          </span>
-                          <span className="font-medium">
-                            {count} ({pct}%)
-                          </span>
-                        </div>
-                        <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-blue-500 rounded-full transition-all"
-                            style={{ width: `${pct}%` }}
-                          />
-                        </div>
-                      </div>
-                    );
-                  })}
+              <div className="bg-blue-50 border border-blue-100 rounded-xl p-4">
+                <p className="text-sm text-blue-900 font-medium mb-2">
+                  Le plan Pro débloque les analytics avancés
+                </p>
+                <p className="text-sm text-blue-700">
+                  Répartition par appareil, historique des scans et lecture détaillée des performances.
+                </p>
+                <a
+                  href="/dashboard"
+                  className="inline-block mt-4 text-sm bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                >
+                  Passer en Pro
+                </a>
               </div>
             )}
           </div>
@@ -415,58 +433,81 @@ export default function QRDetailPage({
         {/* Recent Scans */}
         <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
           <h2 className="font-semibold mb-4">
-            Scans récents{" "}
-            <span className="text-sm font-normal text-gray-400">
-              (100 derniers)
-            </span>
+            {isPro ? (
+              <>
+                Scans récents{" "}
+                <span className="text-sm font-normal text-gray-400">
+                  (100 derniers)
+                </span>
+              </>
+            ) : (
+              "Historique des scans"
+            )}
           </h2>
-          {recentScans.length === 0 ? (
-            <p className="text-sm text-gray-400 text-center py-8">
-              Aucun scan enregistré pour ce QR code.
-            </p>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-gray-100 text-left text-gray-500">
-                    <th className="pb-2 font-medium">Date</th>
-                    <th className="pb-2 font-medium">Appareil</th>
-                    <th className="pb-2 font-medium">Pays</th>
-                    <th className="pb-2 font-medium">Ville</th>
-                    <th className="pb-2 font-medium">Referer</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {recentScans.map((scan) => (
-                    <tr
-                      key={scan.id}
-                      className="border-b border-gray-50 hover:bg-gray-50"
-                    >
-                      <td className="py-2.5 text-gray-700">
-                        {new Date(scan.scanned_at).toLocaleDateString("fr-FR", {
-                          day: "2-digit",
-                          month: "2-digit",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </td>
-                      <td className="py-2.5">
-                        {scan.device === "mobile"
-                          ? "📱"
-                          : scan.device === "tablet"
-                            ? "📲"
-                            : "💻"}{" "}
-                        {scan.device || "—"}
-                      </td>
-                      <td className="py-2.5">{scan.country || "—"}</td>
-                      <td className="py-2.5">{scan.city || "—"}</td>
-                      <td className="py-2.5 truncate max-w-[150px] text-gray-400">
-                        {scan.referer || "Direct"}
-                      </td>
+          {isPro ? (
+            recentScans.length === 0 ? (
+              <p className="text-sm text-gray-400 text-center py-8">
+                Aucun scan enregistré pour ce QR code.
+              </p>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-gray-100 text-left text-gray-500">
+                      <th className="pb-2 font-medium">Date</th>
+                      <th className="pb-2 font-medium">Appareil</th>
+                      <th className="pb-2 font-medium">Pays</th>
+                      <th className="pb-2 font-medium">Ville</th>
+                      <th className="pb-2 font-medium">Referer</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {recentScans.map((scan) => (
+                      <tr
+                        key={scan.id}
+                        className="border-b border-gray-50 hover:bg-gray-50"
+                      >
+                        <td className="py-2.5 text-gray-700">
+                          {new Date(scan.scanned_at).toLocaleDateString("fr-FR", {
+                            day: "2-digit",
+                            month: "2-digit",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </td>
+                        <td className="py-2.5">
+                          {scan.device === "mobile"
+                            ? "📱"
+                            : scan.device === "tablet"
+                              ? "📲"
+                              : "💻"}{" "}
+                          {scan.device || "—"}
+                        </td>
+                        <td className="py-2.5">{scan.country || "—"}</td>
+                        <td className="py-2.5">{scan.city || "—"}</td>
+                        <td className="py-2.5 truncate max-w-[150px] text-gray-400">
+                          {scan.referer || "Direct"}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )
+          ) : (
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-center">
+              <p className="text-sm text-amber-800">
+                Le détail des scans est réservé au plan Pro.
+              </p>
+              <p className="text-xs text-amber-700 mt-1">
+                Vous conservez déjà le nombre total de scans dans le plan gratuit.
+              </p>
+              <a
+                href="/dashboard"
+                className="inline-block mt-4 text-sm bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 transition-colors font-medium"
+              >
+                Voir l&apos;offre Pro
+              </a>
             </div>
           )}
         </div>

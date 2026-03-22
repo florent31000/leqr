@@ -35,6 +35,17 @@ export async function GET(
     return NextResponse.json({ error: "QR code non trouvé" }, { status: 404 });
   }
 
+  const { data: sub } = await supabase
+    .from("subscriptions")
+    .select("plan, status")
+    .eq("user_id", user.id)
+    .single();
+
+  const hasDetailedAnalytics =
+    !!sub &&
+    sub.status === "active" &&
+    (sub.plan === "pro" || sub.plan === "business");
+
   const { data: scans } = await supabase
     .from("scans")
     .select("*")
@@ -48,15 +59,18 @@ export async function GET(
     .eq("qr_id", id);
 
   const deviceBreakdown: Record<string, number> = {};
-  scans?.forEach((s) => {
-    const d = s.device || "unknown";
-    deviceBreakdown[d] = (deviceBreakdown[d] || 0) + 1;
-  });
+  if (hasDetailedAnalytics) {
+    scans?.forEach((s) => {
+      const d = s.device || "unknown";
+      deviceBreakdown[d] = (deviceBreakdown[d] || 0) + 1;
+    });
+  }
 
   return NextResponse.json({
     qr,
     totalScans: totalScans || 0,
-    recentScans: scans || [],
+    recentScans: hasDetailedAnalytics ? scans || [] : [],
     deviceBreakdown,
+    hasDetailedAnalytics,
   });
 }

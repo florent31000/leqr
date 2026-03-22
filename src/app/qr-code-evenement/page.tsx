@@ -74,7 +74,7 @@ export default function QRCodeEvenement() {
             Préparez vos QR codes pour votre événement
           </h2>
           <p className="text-blue-100 mb-6">
-            Gratuit, sans inscription, prêt en 30 secondes.
+            Compte gratuit requis, puis jusqu&apos;à 10 QR inclus.
           </p>
           <a
             href="/"

@@ -78,9 +78,9 @@ export default function Article() {
 
         <h2>Combien ça coûte ?</h2>
         <p>
-          Sur LeQR.fr, les QR codes sont <strong>100% gratuits, illimités,
-          sans inscription</strong>. Tous passent par nos serveurs. Pour modifier l&apos;URL
-          après impression et supprimer l&apos;overlay, le plan Pro est à seulement 9,99€/mois.
+          Sur LeQR.fr, vous pouvez créer <strong>jusqu&apos;à 10 QR avec un compte gratuit</strong>.
+          Tous passent par nos serveurs. Pour modifier
+          l&apos;URL après impression et supprimer l&apos;overlay, le plan Pro est à 14,90€/mois.
         </p>
 
         <div className="bg-blue-600 text-white rounded-2xl p-8 text-center not-prose mt-8">

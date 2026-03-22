@@ -62,7 +62,7 @@ export default function Dashboard() {
       if (typeof window.gtag === "function") {
         window.gtag("event", "conversion", {
           send_to: "AW-18033544712/purchase",
-          value: 9.99,
+          value: 14.9,
           currency: "EUR",
         });
       }
@@ -74,7 +74,7 @@ export default function Dashboard() {
     loadData();
   }, [loadData]);
 
-  const handleUpgrade = async (plan: "pro" | "business", billing: "monthly" | "annual") => {
+  const handleUpgrade = async (billing: "monthly" | "annual") => {
     setUpgrading(true);
     const {
       data: { session },
@@ -87,7 +87,7 @@ export default function Dashboard() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${session.access_token}`,
       },
-      body: JSON.stringify({ plan, billing }),
+      body: JSON.stringify({ plan: "pro", billing }),
     });
 
     if (res.ok) {
@@ -156,8 +156,9 @@ export default function Dashboard() {
   const plan = subscription?.plan || "free";
   const isActive = subscription?.status === "active";
   const isPaid = isActive && plan !== "free";
-  const dynamicCount = qrCodes.filter((q) => q.is_dynamic).length;
-  const dynamicLimit = plan === "business" ? 9999 : plan === "pro" ? 50 : 0;
+  const qrCount = qrCodes.length;
+  const qrLimit = plan === "business" ? 9999 : plan === "pro" ? 50 : 10;
+  const canModify = isActive && (plan === "pro" || plan === "business");
 
   if (loading) {
     return (
@@ -198,7 +199,7 @@ export default function Dashboard() {
             <div>
               <h2 className="font-bold text-lg">Passez en Pro</h2>
               <p className="text-blue-100 text-sm">
-                Modification d&apos;URL après impression, analytics complets et redirection instantanée.
+                10 QR gratuits dans votre espace. Passez en Pro pour 50 QR modifiables, analytics détaillés et redirection instantanée.
               </p>
             </div>
             <button
@@ -239,67 +240,35 @@ export default function Dashboard() {
               >
                 ✕
               </button>
-              <h2 className="text-2xl font-bold mb-6 text-center">Choisir un plan</h2>
-              <div className="grid md:grid-cols-2 gap-6">
-                {/* Pro */}
+              <h2 className="text-2xl font-bold mb-6 text-center">Passer en Pro</h2>
+              <div className="max-w-md mx-auto">
                 <div className="border-2 border-blue-600 rounded-2xl p-6">
                   <h3 className="text-lg font-bold mb-1">Pro</h3>
                   <div className="text-3xl font-extrabold mb-1">
-                    9,99€<span className="text-base font-normal text-gray-400">/mois</span>
+                    14,90€<span className="text-base font-normal text-gray-400">/mois</span>
                   </div>
-                  <p className="text-xs text-gray-400 mb-4">ou 89,91€/an (3 mois offerts)</p>
+                  <p className="text-xs text-gray-400 mb-4">ou 149€/an (2 mois offerts)</p>
                   <ul className="space-y-2 text-sm text-gray-600 mb-6">
                     <li>✓ 50 QR modifiables</li>
                     <li>✓ Modifier l&apos;URL après impression</li>
-                    <li>✓ Analytics complets</li>
-                    <li>✓ Sans overlay à la redirection</li>
+                    <li>✓ Analytics détaillés (appareil, source, historique)</li>
+                    <li>✓ Redirection instantanée sans overlay</li>
                     <li>✓ Support prioritaire</li>
                   </ul>
                   <div className="space-y-2">
                     <button
-                      onClick={() => handleUpgrade("pro", "monthly")}
+                      onClick={() => handleUpgrade("monthly")}
                       disabled={upgrading}
                       className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold py-2.5 rounded-xl transition-all text-sm"
                     >
-                      {upgrading ? "Redirection..." : "9,99€/mois"}
+                      {upgrading ? "Redirection..." : "14,90€/mois"}
                     </button>
                     <button
-                      onClick={() => handleUpgrade("pro", "annual")}
+                      onClick={() => handleUpgrade("annual")}
                       disabled={upgrading}
                       className="w-full bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold py-2.5 rounded-xl transition-all text-sm"
                     >
-                      {upgrading ? "Redirection..." : "89,91€/an (-25%)"}
-                    </button>
-                  </div>
-                </div>
-                {/* Business */}
-                <div className="border border-gray-200 rounded-2xl p-6">
-                  <h3 className="text-lg font-bold mb-1">Business</h3>
-                  <div className="text-3xl font-extrabold mb-1">
-                    29,99€<span className="text-base font-normal text-gray-400">/mois</span>
-                  </div>
-                  <p className="text-xs text-gray-400 mb-4">ou 269,91€/an (3 mois offerts)</p>
-                  <ul className="space-y-2 text-sm text-gray-600 mb-6">
-                    <li>✓ QR modifiables illimités</li>
-                    <li>✓ Tout du plan Pro</li>
-                    <li>✓ Domaine court personnalisé</li>
-                    <li>✓ Création en masse (CSV)</li>
-                    <li>✓ Support dédié</li>
-                  </ul>
-                  <div className="space-y-2">
-                    <button
-                      onClick={() => handleUpgrade("business", "monthly")}
-                      disabled={upgrading}
-                      className="w-full bg-gray-900 hover:bg-gray-800 disabled:opacity-50 text-white font-semibold py-2.5 rounded-xl transition-all text-sm"
-                    >
-                      {upgrading ? "Redirection..." : "29,99€/mois"}
-                    </button>
-                    <button
-                      onClick={() => handleUpgrade("business", "annual")}
-                      disabled={upgrading}
-                      className="w-full bg-gray-50 hover:bg-gray-100 text-gray-700 font-semibold py-2.5 rounded-xl transition-all text-sm"
-                    >
-                      {upgrading ? "Redirection..." : "269,91€/an (-25%)"}
+                      {upgrading ? "Redirection..." : "149€/an (2 mois offerts)"}
                     </button>
                   </div>
                 </div>
@@ -312,7 +281,8 @@ export default function Dashboard() {
           <div>
             <h1 className="text-2xl font-bold">Mes QR Codes</h1>
             <p className="text-sm text-gray-400 mt-1">
-              {dynamicCount}/{dynamicLimit === 9999 ? "∞" : dynamicLimit} QR modifiables
+              {qrCount}/{qrLimit === 9999 ? "∞" : qrLimit}{" "}
+              {canModify ? "QR modifiables" : "QR dans votre espace gratuit"}
               {isPaid && subscription?.current_period_end && (
                 <> — Plan {plan.charAt(0).toUpperCase() + plan.slice(1)}</>
               )}
@@ -338,19 +308,26 @@ export default function Dashboard() {
                 Gérer mon abonnement
               </button>
             )}
-            {dynamicLimit > 0 ? (
+            {qrCount < qrLimit ? (
               <button
                 onClick={() => setShowCreate(true)}
                 className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg text-sm transition-all"
               >
-                + Nouveau QR modifiable
+                + Nouveau QR
               </button>
-            ) : (
+            ) : !isPaid ? (
               <button
                 onClick={() => setShowUpgradeModal(true)}
                 className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg text-sm transition-all"
               >
-                Passer en Pro pour créer des QR modifiables
+                Passer en Pro pour plus de QR
+              </button>
+            ) : (
+              <button
+                disabled
+                className="bg-gray-200 text-gray-500 font-semibold px-4 py-2 rounded-lg text-sm cursor-not-allowed"
+              >
+                Limite atteinte
               </button>
             )}
           </div>
@@ -359,7 +336,12 @@ export default function Dashboard() {
         {/* Create modal */}
         {showCreate && (
           <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-lg">
-            <h2 className="font-semibold mb-4">Nouveau QR code modifiable</h2>
+            <h2 className="font-semibold mb-2">Nouveau QR code</h2>
+            <p className="text-sm text-gray-500 mb-4">
+              {canModify
+                ? "Créez un QR modifiable et changez son URL plus tard si besoin."
+                : "Ce QR sera enregistré dans votre espace gratuit. Passez en Pro pour modifier l'URL après impression."}
+            </p>
             <div className="space-y-3">
               <input
                 type="url"
@@ -402,13 +384,13 @@ export default function Dashboard() {
               Aucun QR code pour le moment
             </h2>
             <p className="text-gray-500 mb-6">
-              Passez en Pro pour créer des QR modifiables et changer leur URL après impression.
+              Créez jusqu&apos;à 10 QR gratuitement, puis passez en Pro pour en gérer 50 et modifier leur destination.
             </p>
             <button
-              onClick={() => (dynamicLimit > 0 ? setShowCreate(true) : setShowUpgradeModal(true))}
+              onClick={() => (qrCount < qrLimit ? setShowCreate(true) : setShowUpgradeModal(true))}
               className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg"
             >
-              {dynamicLimit > 0 ? "Créer mon premier QR" : "Voir les offres"}
+              {qrCount < qrLimit ? "Créer mon premier QR" : "Voir les offres"}
             </button>
           </div>
         ) : (
@@ -435,7 +417,7 @@ export default function Dashboard() {
                     <span
                       className="text-[10px] px-1.5 py-0.5 rounded-full font-medium shrink-0 bg-green-50 text-green-700"
                     >
-                      {isPaid ? "Modifiable" : "Via LeQR"}
+                      {canModify ? "Modifiable" : "Gratuit"}
                     </span>
                   </div>
                   <p className="text-xs text-gray-400 truncate">

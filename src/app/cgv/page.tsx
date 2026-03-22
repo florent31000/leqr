@@ -26,26 +26,20 @@ export default function CGV() {
         <h2>2. Services proposés</h2>
         <h3>Plan Gratuit</h3>
         <ul>
-          <li>Génération illimitée de QR codes</li>
+          <li>Compte gratuit requis</li>
+          <li>Jusqu&apos;à 10 QR avec un compte gratuit</li>
           <li>Personnalisation des couleurs</li>
           <li>Téléchargement en PNG et SVG</li>
-          <li>Suivi du nombre de scans</li>
+          <li>Suivi du nombre total de scans</li>
+          <li>Tableau de bord pour retrouver ses QR</li>
         </ul>
-        <h3>Plan Pro (9,99€/mois ou 89,91€/an)</h3>
+        <h3>Plan Pro (14,90€/mois ou 149€/an)</h3>
         <ul>
           <li>Modification de l&apos;URL après impression</li>
           <li>50 QR codes modifiables</li>
-          <li>Analytics complets (géolocalisation, appareil, historique)</li>
-          <li>Aucun overlay à la redirection</li>
+          <li>Analytics détaillés (source, appareil, historique)</li>
+          <li>Redirection instantanée sans overlay</li>
           <li>Support prioritaire</li>
-        </ul>
-        <h3>Plan Business (29,99€/mois ou 269,91€/an)</h3>
-        <ul>
-          <li>Tout du plan Pro</li>
-          <li>QR codes modifiables illimités</li>
-          <li>Domaine court personnalisé</li>
-          <li>Création en masse (CSV)</li>
-          <li>Support dédié</li>
         </ul>
 
         <h2>3. Tarifs et paiement</h2>
@@ -64,10 +58,9 @@ export default function CGV() {
 
         <h2>5. Comportement des QR codes après résiliation</h2>
         <p>
-          <strong>Vos QR codes ne meurent jamais.</strong> Si vous résiliez votre abonnement Pro
-          ou Business, vos QR codes continuent de fonctionner mais reviennent à leur URL
-          initiale. Un overlay &quot;Propulsé par LeQR.fr&quot; s&apos;affichera pendant 3 secondes avant
-          la redirection.
+          <strong>Vos QR codes ne meurent jamais.</strong> Si vous résiliez votre abonnement Pro,
+          vos QR codes continuent de fonctionner mais reviennent à leur URL initiale. Un overlay
+          &quot;Propulsé par LeQR.fr&quot; s&apos;affichera pendant 3 secondes avant la redirection.
         </p>
 
         <h2>6. Responsabilité</h2>

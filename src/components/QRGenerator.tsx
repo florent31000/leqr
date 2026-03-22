@@ -1,11 +1,10 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
+import { getSupabase } from "@/lib/supabase";
 
 const PRESETS = [
   { label: "URL", icon: "🔗", placeholder: "https://exemple.fr" },
-  { label: "WiFi", icon: "📶", placeholder: "" },
-  { label: "Texte", icon: "📝", placeholder: "Votre texte ici..." },
   { label: "Email", icon: "✉️", placeholder: "contact@exemple.fr" },
   { label: "Téléphone", icon: "📞", placeholder: "+33 6 12 34 56 78" },
 ];
@@ -21,138 +20,137 @@ const COLORS = [
   "#be185d",
 ];
 
-interface WiFiData {
-  ssid: string;
-  password: string;
-  encryption: "WPA" | "WEP" | "nopass";
-}
-
 export default function QRGenerator() {
   const [activeTab, setActiveTab] = useState(0);
   const [url, setUrl] = useState("https://");
-  const [text, setText] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [wifi, setWifi] = useState<WiFiData>({
-    ssid: "",
-    password: "",
-    encryption: "WPA",
-  });
   const [fgColor, setFgColor] = useState("#000000");
   const [bgColor, setBgColor] = useState("#ffffff");
   const [qrDataURL, setQrDataURL] = useState<string | null>(null);
   const [shortCode, setShortCode] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
+  const [downloadingSvg, setDownloadingSvg] = useState(false);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    getSupabase()
+      .auth.getSession()
+      .then(({ data: { session } }) => {
+        setAccessToken(session?.access_token || null);
+      })
+      .catch(() => {
+        setAccessToken(null);
+      });
+  }, []);
 
   const getQRData = useCallback((): string => {
     switch (activeTab) {
       case 0:
         return url;
       case 1:
-        return `WIFI:T:${wifi.encryption};S:${wifi.ssid};P:${wifi.password};;`;
-      case 2:
-        return text;
-      case 3:
         return `mailto:${email}`;
-      case 4:
+      case 2:
         return `tel:${phone}`;
       default:
         return url;
     }
-  }, [activeTab, url, wifi, text, email, phone]);
+  }, [activeTab, url, email, phone]);
 
   const isInputValid = useCallback((): boolean => {
     const data = getQRData();
     if (!data) return false;
     if (activeTab === 0 && (data === "https://" || data.length < 10)) return false;
-    if (activeTab === 1 && !wifi.ssid) return false;
-    if (activeTab === 2 && !text) return false;
-    if (activeTab === 3 && (data === "mailto:" || !email)) return false;
-    if (activeTab === 4 && (data === "tel:" || !phone)) return false;
+    if (activeTab === 1 && (data === "mailto:" || !email)) return false;
+    if (activeTab === 2 && (data === "tel:" || !phone)) return false;
     return true;
-  }, [getQRData, activeTab, wifi.ssid, text, email, phone]);
+  }, [getQRData, activeTab, email, phone]);
 
-  // Live preview: generate a non-tracked QR for instant feedback
-  const generatePreview = useCallback(async () => {
-    if (!isInputValid()) {
-      setQrDataURL(null);
-      setShortCode(null);
+  useEffect(() => {
+    setQrDataURL(null);
+    setShortCode(null);
+  }, [activeTab, url, email, phone, fgColor, bgColor]);
+
+  const buildTrackedHeaders = (): HeadersInit => ({
+    "Content-Type": "application/json",
+    ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+  });
+
+  const createTrackedQR = async () => {
+    if (!accessToken) {
+      window.location.href = "/connexion?signup=true";
       return;
     }
+
+    if (!isInputValid()) return;
+
     setGenerating(true);
+    try {
+      const res = await fetch("/api/qr/generate", {
+        method: "POST",
+        headers: buildTrackedHeaders(),
+        body: JSON.stringify({
+          data: getQRData(),
+          fgColor,
+          bgColor,
+          size: 1000,
+          format: "png",
+          tracked: true,
+        }),
+      });
+      const json = await res.json();
+
+      if (!res.ok || !json.dataURL || !json.shortCode) {
+        alert(json.error || "Erreur lors de la génération du QR code.");
+        return;
+      }
+
+      setQrDataURL(json.dataURL);
+      setShortCode(json.shortCode);
+    } catch {
+      alert("Erreur lors de la génération du QR code.");
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  const downloadPNG = () => {
+    if (!qrDataURL) return;
+    const link = document.createElement("a");
+    link.download = "leqr-code.png";
+    link.href = qrDataURL;
+    link.click();
+  };
+
+  const downloadSVG = async () => {
+    if (!shortCode) return;
+
+    setDownloadingSvg(true);
     try {
       const res = await fetch("/api/qr/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          data: getQRData(),
+          data: `${window.location.origin}/r/${shortCode}`,
           fgColor,
           bgColor,
-          size: 400,
+          format: "svg",
           tracked: false,
         }),
       });
       const json = await res.json();
-      if (json.dataURL) setQrDataURL(json.dataURL);
-    } catch {
-      // silently fail
+      if (!res.ok || !json.svg) {
+        alert(json.error || "Erreur lors de l'export SVG.");
+        return;
+      }
+      const blob = new Blob([json.svg], { type: "image/svg+xml" });
+      const link = document.createElement("a");
+      link.download = "leqr-code.svg";
+      link.href = URL.createObjectURL(blob);
+      link.click();
     } finally {
-      setGenerating(false);
+      setDownloadingSvg(false);
     }
-  }, [isInputValid, getQRData, fgColor, bgColor]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      generatePreview();
-    }, 400);
-    return () => clearTimeout(timer);
-  }, [generatePreview]);
-
-  // Download: generate a tracked QR (goes through our servers)
-  const downloadPNG = async () => {
-    if (!isInputValid()) return;
-    const res = await fetch("/api/qr/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        data: getQRData(),
-        fgColor,
-        bgColor,
-        size: 1000,
-        format: "png",
-        tracked: true,
-      }),
-    });
-    const json = await res.json();
-    if (!json.dataURL) return;
-    if (json.shortCode) setShortCode(json.shortCode);
-    const link = document.createElement("a");
-    link.download = "leqr-code.png";
-    link.href = json.dataURL;
-    link.click();
-  };
-
-  const downloadSVG = async () => {
-    if (!isInputValid()) return;
-    const res = await fetch("/api/qr/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        data: getQRData(),
-        fgColor,
-        bgColor,
-        format: "svg",
-        tracked: true,
-      }),
-    });
-    const json = await res.json();
-    if (!json.svg) return;
-    if (json.shortCode) setShortCode(json.shortCode);
-    const blob = new Blob([json.svg], { type: "image/svg+xml" });
-    const link = document.createElement("a");
-    link.download = "leqr-code.svg";
-    link.href = URL.createObjectURL(blob);
-    link.click();
   };
 
   return (
@@ -161,7 +159,6 @@ export default function QRGenerator() {
         <div className="grid md:grid-cols-2 gap-0">
           {/* Left: Controls */}
           <div className="p-6 md:p-8 border-r border-gray-100">
-            {/* Tabs */}
             <div className="flex gap-1 mb-6 flex-wrap">
               {PRESETS.map((preset, i) => (
                 <button
@@ -178,7 +175,6 @@ export default function QRGenerator() {
               ))}
             </div>
 
-            {/* Input fields per tab */}
             <div className="mb-6">
               {activeTab === 0 && (
                 <input
@@ -190,47 +186,6 @@ export default function QRGenerator() {
                 />
               )}
               {activeTab === 1 && (
-                <div className="space-y-3">
-                  <input
-                    type="text"
-                    value={wifi.ssid}
-                    onChange={(e) => setWifi({ ...wifi, ssid: e.target.value })}
-                    placeholder="Nom du réseau (SSID)"
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  />
-                  <input
-                    type="password"
-                    value={wifi.password}
-                    onChange={(e) => setWifi({ ...wifi, password: e.target.value })}
-                    placeholder="Mot de passe"
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  />
-                  <select
-                    value={wifi.encryption}
-                    onChange={(e) =>
-                      setWifi({
-                        ...wifi,
-                        encryption: e.target.value as WiFiData["encryption"],
-                      })
-                    }
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
-                  >
-                    <option value="WPA">WPA/WPA2</option>
-                    <option value="WEP">WEP</option>
-                    <option value="nopass">Pas de mot de passe</option>
-                  </select>
-                </div>
-              )}
-              {activeTab === 2 && (
-                <textarea
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}
-                  placeholder="Votre texte ici..."
-                  rows={3}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
-                />
-              )}
-              {activeTab === 3 && (
                 <input
                   type="email"
                   value={email}
@@ -239,7 +194,7 @@ export default function QRGenerator() {
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-lg"
                 />
               )}
-              {activeTab === 4 && (
+              {activeTab === 2 && (
                 <input
                   type="tel"
                   value={phone}
@@ -250,7 +205,6 @@ export default function QRGenerator() {
               )}
             </div>
 
-            {/* Color controls */}
             <div className="mb-6">
               <label className="block text-sm font-semibold text-gray-700 mb-3">
                 Couleur du QR code
@@ -278,30 +232,47 @@ export default function QRGenerator() {
               </div>
             </div>
 
-            {/* Download buttons */}
-            <div className="flex gap-3">
-              <button
-                onClick={downloadPNG}
-                disabled={!isInputValid()}
-                className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white font-semibold py-3 px-4 rounded-xl transition-all shadow-md hover:shadow-lg"
+            {accessToken ? (
+              <div className="space-y-3">
+                <button
+                  onClick={createTrackedQR}
+                  disabled={!isInputValid() || generating}
+                  className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white font-semibold py-3 px-4 rounded-xl transition-all shadow-md hover:shadow-lg"
+                >
+                  {generating ? "Création..." : "Créer mon QR"}
+                </button>
+                {qrDataURL && (
+                  <div className="flex gap-3">
+                    <button
+                      onClick={downloadPNG}
+                      className="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold py-3 px-4 rounded-xl transition-all"
+                    >
+                      Télécharger PNG
+                    </button>
+                    <button
+                      onClick={downloadSVG}
+                      disabled={downloadingSvg}
+                      className="flex-1 bg-gray-800 hover:bg-gray-900 disabled:bg-gray-300 text-white font-semibold py-3 px-4 rounded-xl transition-all"
+                    >
+                      {downloadingSvg ? "Export..." : "Télécharger SVG"}
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <a
+                href="/connexion?signup=true"
+                className="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl transition-all shadow-md hover:shadow-lg"
               >
-                Télécharger PNG
-              </button>
-              <button
-                onClick={downloadSVG}
-                disabled={!isInputValid()}
-                className="flex-1 bg-gray-800 hover:bg-gray-900 disabled:bg-gray-300 text-white font-semibold py-3 px-4 rounded-xl transition-all shadow-md hover:shadow-lg"
-              >
-                Télécharger SVG
-              </button>
-            </div>
+                Créer un compte gratuit
+              </a>
+            )}
 
             <p className="text-xs text-gray-400 mt-3 text-center">
-              Haute résolution, sans filigrane, usage commercial autorisé
+              10 QR gratuits avec compte, haute résolution, usage commercial autorisé
             </p>
           </div>
 
-          {/* Right: QR Preview */}
           <div className="p-6 md:p-8 flex flex-col items-center justify-center bg-gray-50/50">
             <div
               className="w-64 h-64 rounded-2xl flex items-center justify-center bg-white shadow-inner border border-gray-100"
@@ -319,26 +290,28 @@ export default function QRGenerator() {
                   <p className="text-sm">
                     {generating
                       ? "Génération..."
-                      : "Entrez une URL pour générer votre QR code"}
+                      : accessToken
+                        ? "Créez votre QR pour afficher la version finale via LeQR"
+                        : "Créez un compte gratuit pour générer un QR via LeQR"}
                   </p>
                 </div>
               )}
             </div>
 
-            {/* Post-download info */}
             {shortCode ? (
               <div className="mt-6 text-center">
                 <div className="inline-flex items-center gap-2 bg-green-50 text-green-800 px-4 py-2 rounded-full text-sm font-medium border border-green-200">
-                  ✓ QR code téléchargé
+                  ✓ QR code créé
                 </div>
                 <p className="text-sm text-gray-600 mt-3">
+                  Retrouvez ce QR dans{" "}
                   <a
-                    href="/connexion?signup=true"
+                    href="/dashboard"
                     className="text-blue-600 hover:underline font-medium"
                   >
-                    Créez un compte gratuit
-                  </a>{" "}
-                  pour suivre les scans et gérer vos QR codes
+                    votre dashboard
+                  </a>
+                  .
                 </p>
                 <p className="text-xs text-gray-400 mt-1">
                   Besoin de modifier l&apos;URL après impression ?{" "}
@@ -350,13 +323,21 @@ export default function QRGenerator() {
             ) : (
               <div className="mt-6 text-center">
                 <div className="inline-flex items-center gap-2 bg-amber-50 text-amber-800 px-4 py-2 rounded-full text-sm font-medium border border-amber-200">
-                  ⚡ Tous les QR passent par LeQR
+                  {accessToken ? "Compte gratuit : 10 QR inclus" : "Compte requis pour générer"}
                 </div>
                 <p className="text-xs text-gray-500 mt-2">
-                  <a href="#pricing" className="text-blue-600 hover:underline">
-                    Passez en Pro
-                  </a>{" "}
-                  pour modifier l&apos;URL après impression et retirer l&apos;overlay
+                  {accessToken ? (
+                    <>
+                      <a href="#pricing" className="text-blue-600 hover:underline">
+                        Passez en Pro
+                      </a>{" "}
+                      pour modifier l&apos;URL après impression et retirer l&apos;overlay.
+                    </>
+                  ) : (
+                    <>
+                      Créez un compte gratuit pour générer vos QR, les suivre et les retrouver dans votre dashboard.
+                    </>
+                  )}
                 </p>
               </div>
             )}
