@@ -147,12 +147,70 @@ export default function QRDetailPage({
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* QR Info Header */}
         <div className="bg-white border border-gray-100 rounded-2xl p-6 mb-6 shadow-sm">
-          <div className="flex items-start justify-between flex-wrap gap-4">
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-3 mb-2">
-                <div
-                  className={`w-3 h-3 rounded-full ${qr.is_dynamic ? "bg-green-400" : "bg-gray-300"}`}
+          <div className="flex items-start gap-6 flex-wrap">
+            {/* QR Code Image */}
+            <div className="shrink-0 flex flex-col items-center gap-3">
+              <div className="w-48 h-48 bg-white border-2 border-gray-200 rounded-xl overflow-hidden flex items-center justify-center shadow-sm">
+                <img
+                  src={`/api/qr/${qr.id}/image?size=400`}
+                  alt={`QR ${qr.label || qr.short_code}`}
+                  className="w-full h-full object-contain p-1"
                 />
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={async () => {
+                    const res = await fetch(`/api/qr/${qr.id}/image?size=1000`);
+                    const blob = await res.blob();
+                    const link = document.createElement("a");
+                    link.download = `leqr-${qr.short_code}.png`;
+                    link.href = URL.createObjectURL(blob);
+                    link.click();
+                  }}
+                  className="text-xs bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                >
+                  PNG
+                </button>
+                <button
+                  onClick={async () => {
+                    const res = await fetch("/api/qr/generate", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        data: `https://leqr.fr/r/${qr.short_code}`,
+                        fgColor: qr.fg_color || "#000000",
+                        bgColor: qr.bg_color || "#ffffff",
+                        format: "svg",
+                        tracked: false,
+                      }),
+                    });
+                    const json = await res.json();
+                    if (!json.svg) return;
+                    const blob = new Blob([json.svg], { type: "image/svg+xml" });
+                    const link = document.createElement("a");
+                    link.download = `leqr-${qr.short_code}.svg`;
+                    link.href = URL.createObjectURL(blob);
+                    link.click();
+                  }}
+                  className="text-xs bg-gray-800 text-white px-3 py-1.5 rounded-lg hover:bg-gray-900 transition-colors font-medium"
+                >
+                  SVG
+                </button>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(`https://leqr.fr/r/${qr.short_code}`);
+                    alert("Lien copié !");
+                  }}
+                  className="text-xs bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+                >
+                  Copier le lien
+                </button>
+              </div>
+            </div>
+
+            {/* Info */}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-3 mb-3">
                 <h1 className="text-xl font-bold truncate">
                   {qr.label || "Sans nom"}
                 </h1>
@@ -163,11 +221,9 @@ export default function QRDetailPage({
                 </span>
               </div>
 
-              <div className="space-y-1 text-sm text-gray-500">
+              <div className="space-y-2 text-sm text-gray-500">
                 <p>
-                  <span className="font-medium text-gray-700">
-                    URL courte :
-                  </span>{" "}
+                  <span className="font-medium text-gray-700">URL courte :</span>{" "}
                   <a
                     href={`https://leqr.fr/r/${qr.short_code}`}
                     target="_blank"
@@ -178,9 +234,7 @@ export default function QRDetailPage({
                   </a>
                 </p>
                 <p>
-                  <span className="font-medium text-gray-700">
-                    Destination :
-                  </span>{" "}
+                  <span className="font-medium text-gray-700">Destination :</span>{" "}
                   {editing ? (
                     <span className="inline-flex items-center gap-2 mt-1">
                       <input
@@ -233,7 +287,7 @@ export default function QRDetailPage({
                   )}
                 </p>
                 <p>
-                  <span className="font-medium text-gray-700">Créé le :</span>{" "}
+                  <span className="font-medium text-gray-700">Cree le :</span>{" "}
                   {new Date(qr.created_at).toLocaleDateString("fr-FR", {
                     day: "numeric",
                     month: "long",
@@ -243,14 +297,14 @@ export default function QRDetailPage({
                   })}
                 </p>
               </div>
-            </div>
 
-            <div className="text-center bg-blue-50 rounded-xl p-4 min-w-[120px]">
-              <div className="text-3xl font-extrabold text-blue-600">
-                {totalScans}
-              </div>
-              <div className="text-xs text-blue-500 font-medium">
-                scans totaux
+              <div className="mt-4 inline-flex items-center gap-2 bg-blue-50 rounded-xl px-4 py-3">
+                <div className="text-2xl font-extrabold text-blue-600">
+                  {totalScans}
+                </div>
+                <div className="text-xs text-blue-500 font-medium">
+                  scans totaux
+                </div>
               </div>
             </div>
           </div>
@@ -302,38 +356,38 @@ export default function QRDetailPage({
             )}
           </div>
 
-          {/* Quick Actions */}
+          {/* Scan Timeline */}
           <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
-            <h2 className="font-semibold mb-4">Actions rapides</h2>
-            <div className="space-y-3">
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(
-                    `https://leqr.fr/r/${qr.short_code}`
-                  );
-                  alert("Lien copié !");
-                }}
-                className="w-full text-left px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-xl text-sm font-medium transition-colors"
-              >
-                📋 Copier le lien court
-              </button>
+            <h2 className="font-semibold mb-4">Lien court</h2>
+            <div className="bg-gray-50 rounded-xl p-4 text-center">
+              <p className="text-lg font-mono font-semibold text-blue-600 mb-2">
+                leqr.fr/r/{qr.short_code}
+              </p>
+              <p className="text-xs text-gray-400 mb-3">
+                Redirige vers : <span className="text-gray-600">{qr.target_url}</span>
+              </p>
               <a
                 href={`https://leqr.fr/r/${qr.short_code}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full text-left px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-xl text-sm font-medium transition-colors"
+                className="inline-block text-xs bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
               >
-                🔗 Tester la redirection
+                Tester la redirection
               </a>
-              {!isPro && (
-                <a
-                  href="/dashboard?upgrade=pro"
-                  className="block w-full text-left px-4 py-3 bg-blue-50 hover:bg-blue-100 rounded-xl text-sm font-medium text-blue-700 transition-colors"
-                >
-                  ⬆️ Passer en Pro pour modifier l&apos;URL
-                </a>
-              )}
             </div>
+            {!isPro && qr.is_dynamic && (
+              <div className="mt-4 bg-amber-50 border border-amber-200 rounded-xl p-3 text-center">
+                <p className="text-xs text-amber-700">
+                  Passez en Pro pour modifier l&apos;URL de destination apres impression
+                </p>
+                <a
+                  href="/dashboard"
+                  className="inline-block mt-2 text-xs bg-amber-600 text-white px-4 py-1.5 rounded-lg hover:bg-amber-700 font-medium"
+                >
+                  Voir les offres
+                </a>
+              </div>
+            )}
           </div>
         </div>
 

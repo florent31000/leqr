@@ -1,8 +1,20 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import QRGenerator from "@/components/QRGenerator";
+import { getSupabase } from "@/lib/supabase";
 
 export default function Home() {
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  useEffect(() => {
+    getSupabase()
+      .auth.getSession()
+      .then(({ data: { session } }) => {
+        if (session) setLoggedIn(true);
+      });
+  }, []);
+
   return (
     <div className="min-h-screen">
       {/* Nav */}
@@ -28,12 +40,21 @@ export default function Home() {
             >
               Tarifs
             </a>
-            <a
-              href="/connexion"
-              className="text-sm bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-all"
-            >
-              Connexion
-            </a>
+            {loggedIn ? (
+              <a
+                href="/dashboard"
+                className="text-sm bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-all"
+              >
+                Mes QR codes
+              </a>
+            ) : (
+              <a
+                href="/connexion"
+                className="text-sm bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-all"
+              >
+                Connexion
+              </a>
+            )}
           </div>
         </div>
       </nav>

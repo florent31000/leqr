@@ -354,41 +354,48 @@ export default function Dashboard() {
         ) : (
           <div className="space-y-4">
             {qrCodes.map((qr) => (
-              <div
+              <a
                 key={qr.id}
-                className="bg-white border border-gray-100 rounded-xl p-5 flex items-center justify-between hover:shadow-md transition-all"
+                href={`/dashboard/qr/${qr.id}`}
+                className="bg-white border border-gray-100 rounded-xl p-5 flex items-center gap-5 hover:shadow-md transition-all block"
               >
-                <div className="flex items-center gap-4">
-                  <div
-                    className={`w-3 h-3 rounded-full ${
-                      qr.is_dynamic ? "bg-green-400" : "bg-gray-300"
-                    }`}
+                <div className="shrink-0 w-20 h-20 bg-white border border-gray-200 rounded-lg overflow-hidden flex items-center justify-center">
+                  <img
+                    src={`/api/qr/${qr.id}/image?size=160`}
+                    alt={`QR ${qr.label || qr.short_code}`}
+                    className="w-full h-full object-contain"
+                    loading="lazy"
                   />
-                  <div>
-                    <h3 className="font-semibold text-sm">
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="font-semibold text-sm truncate">
                       {qr.label || qr.target_url}
                     </h3>
-                    <p className="text-xs text-gray-400">
-                      {qr.is_dynamic ? "Dynamique" : "Statique"} — leqr.fr/r/
-                      {qr.short_code}
-                    </p>
+                    <span
+                      className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium shrink-0 ${
+                        qr.is_dynamic
+                          ? "bg-green-50 text-green-700"
+                          : "bg-gray-100 text-gray-500"
+                      }`}
+                    >
+                      {qr.is_dynamic ? "Dynamique" : "Statique"}
+                    </span>
                   </div>
+                  <p className="text-xs text-gray-400 truncate">
+                    leqr.fr/r/{qr.short_code}
+                  </p>
                 </div>
-                <div className="flex items-center gap-6">
-                  <div className="text-right">
-                    <div className="text-lg font-bold text-blue-600">
-                      {qr.scan_count}
-                    </div>
-                    <div className="text-xs text-gray-400">scans</div>
+                <div className="text-center shrink-0">
+                  <div className="text-lg font-bold text-blue-600">
+                    {qr.scan_count}
                   </div>
-                  <a
-                    href={`/dashboard/qr/${qr.id}`}
-                    className="text-sm text-blue-600 hover:text-blue-700 font-medium"
-                  >
-                    Détails →
-                  </a>
+                  <div className="text-xs text-gray-400">scans</div>
                 </div>
-              </div>
+                <div className="shrink-0 text-gray-300">
+                  →
+                </div>
+              </a>
             ))}
           </div>
         )}
