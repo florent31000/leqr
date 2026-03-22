@@ -151,10 +151,10 @@ export default function Home() {
               </p>
             </div>
             <div className="bg-white/10 rounded-xl p-6 backdrop-blur-sm">
-              <h3 className="font-bold text-lg mb-2">💰 40% moins cher</h3>
+              <h3 className="font-bold text-lg mb-2">💰 Le moins cher du marché</h3>
               <p className="text-blue-100 text-sm">
-                Notre plan Pro coûte 9,99€/mois. Le concurrent français le plus
-                proche ? 17€/mois. On fait mieux pour moins.
+                Notre plan Pro à 9,99€/mois est le plus compétitif du marché
+                français. Des QR codes pro sans se ruiner.
               </p>
             </div>
           </div>
