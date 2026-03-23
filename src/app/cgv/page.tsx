@@ -26,8 +26,8 @@ export default function CGV() {
         <h2>2. Services proposés</h2>
         <h3>Plan Gratuit</h3>
         <ul>
-          <li>Compte gratuit requis</li>
-          <li>Jusqu&apos;à 10 QR avec un compte gratuit</li>
+          <li>Téléchargement de QR gratuit sans compte</li>
+          <li>1 QR modifiable offert avec compte</li>
           <li>Personnalisation des couleurs</li>
           <li>Téléchargement en PNG et SVG</li>
           <li>Suivi du nombre total de scans</li>
@@ -35,6 +35,7 @@ export default function CGV() {
         </ul>
         <h3>Plan Pro (14,90€/mois ou 149€/an)</h3>
         <ul>
+          <li>À partir du 2e QR modifiable</li>
           <li>Modification de l&apos;URL après impression</li>
           <li>50 QR codes modifiables</li>
           <li>Analytics détaillés (source, appareil, historique)</li>

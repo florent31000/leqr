@@ -35,7 +35,8 @@ const BASE_SYSTEM_PROMPT = `Tu es l'assistant du service client de LeQR.fr, un g
 
 INFORMATIONS SUR LE SERVICE :
 - Tous les QR générés sur LeQR passent par nos serveurs
-- Plan Gratuit : compte gratuit requis, jusqu'à 10 QR, personnalisation couleurs, téléchargement PNG & SVG, tableau de bord, suivi du nombre total de scans
+- Sans compte : création et téléchargement de QR simples en PNG & SVG
+- Plan Gratuit avec compte : 1 QR modifiable offert, personnalisation couleurs, tableau de bord, suivi du nombre total de scans
 - Plan Pro (14,90€/mois ou 149€/an - 2 mois offerts) : modification de l'URL après impression, 50 QR modifiables, analytics détaillés, redirection instantanée sans overlay, support prioritaire
 - Si un client arrête de payer, ses QR continuent de fonctionner mais reviennent automatiquement à leur URL initiale avec un overlay "Propulsé par LeQR" pendant 3 secondes
 - Tous les QR passent par nos serveurs (leqr.fr/r/[code]) pour le suivi. Upgrade possible vers dynamique sans refaire le QR

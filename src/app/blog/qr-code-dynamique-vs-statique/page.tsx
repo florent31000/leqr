@@ -113,8 +113,8 @@ export default function Article() {
         <div className="bg-blue-600 text-white rounded-2xl p-8 text-center not-prose mt-8">
           <h2 className="text-2xl font-bold mb-3">Essayez les deux</h2>
           <p className="text-blue-100 mb-6">
-            Testez un QR statique sans compte ou créez jusqu&apos;à 10 QR dynamiques
-            gratuits avec compte. Modification d&apos;URL dès 14,90€/mois.
+            Testez un QR sans compte ou créez votre premier QR modifiable offert
+            avec compte. Modification d&apos;URL et QR supplémentaires dès 14,90€/mois.
           </p>
           <a
             href="/"

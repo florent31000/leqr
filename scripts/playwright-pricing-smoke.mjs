@@ -43,13 +43,14 @@ async function run() {
 
   assert(homepageHtml.includes("14,90"), "Le prix Pro n'est pas visible sur la homepage.");
   assert(
-    homepageHtml.includes("QR statiques gratuits"),
-    "La promesse statique gratuite n'est pas visible sur la homepage."
+    homepageHtml.includes("Gratuit sans compte") ||
+      homepageHtml.includes("gratuit sans compte"),
+    "La promesse gratuit sans compte n'est pas visible sur la homepage."
   );
   assert(
-    homepageHtml.includes("Générer mon QR dynamique") ||
-      homepageHtml.includes("G&eacute;n&eacute;rer mon QR dynamique"),
-    "Le CTA dynamique principal n'est pas visible."
+    homepageHtml.includes("1 QR modifiable offert") ||
+      homepageHtml.includes("1 QR modifiable offert avec compte"),
+    "La promesse du QR modifiable offert n'est pas visible."
   );
   assert(
     homepageHtml.includes("Votre QR code apparaîtra ici") ||
@@ -57,8 +58,9 @@ async function run() {
     "Le bloc d'aperçu de QR n'est pas visible."
   );
   assert(
-    homepageHtml.includes("Menu restaurant"),
-    "Les landing pages par use case ne sont pas visibles depuis la homepage."
+    homepageHtml.includes("Menu restaurant") ||
+      homepageHtml.includes("Carte de visite"),
+    "La section exemples n'est pas visible sur la homepage."
   );
   assert(
     !homepageHtml.includes(">Business<"),
@@ -72,8 +74,8 @@ async function run() {
   await page.goto(baseUrl, { waitUntil: "networkidle" });
   await page.waitForSelector('input[type="url"]');
   assert(
-    await page.getByRole("button", { name: /Générer mon QR dynamique/i }).isVisible(),
-    "Le CTA dynamique n'est pas visible dans l'interface."
+    await page.getByRole("button", { name: /Créer mon QR modifiable/i }).isVisible(),
+    "Le CTA QR modifiable n'est pas visible dans l'interface."
   );
   await page.locator('input[type="url"]').fill("https://example.com/landing");
   await page.waitForSelector('img[alt="QR Code"]', { timeout: 30000 });
@@ -118,7 +120,7 @@ async function run() {
     `Message backend inattendu: ${JSON.stringify(blockedStatus.body)}`
   );
 
-  await page.getByRole("button", { name: /Générer mon QR dynamique/i }).click();
+  await page.getByRole("button", { name: /Créer mon QR modifiable/i }).click();
   await page.waitForURL(/\/connexion\?signup=true/, { timeout: 30000 });
 
   assert(

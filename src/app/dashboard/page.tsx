@@ -157,7 +157,7 @@ export default function Dashboard() {
   const isActive = subscription?.status === "active";
   const isPaid = isActive && plan !== "free";
   const qrCount = qrCodes.length;
-  const qrLimit = plan === "business" ? 9999 : plan === "pro" ? 50 : 10;
+  const qrLimit = plan === "business" ? 9999 : plan === "pro" ? 50 : 1;
   const canModify = isActive && (plan === "pro" || plan === "business");
 
   if (loading) {
@@ -199,7 +199,7 @@ export default function Dashboard() {
             <div>
               <h2 className="font-bold text-lg">Passez en Pro</h2>
               <p className="text-blue-100 text-sm">
-                10 QR gratuits dans votre espace. Passez en Pro pour 50 QR modifiables, analytics détaillés et redirection instantanée.
+                Votre premier QR modifiable est offert. Passez en Pro pour créer un deuxième QR, modifier vos liens plus tard et accéder aux analytics détaillés.
               </p>
             </div>
             <button
@@ -249,6 +249,7 @@ export default function Dashboard() {
                   </div>
                   <p className="text-xs text-gray-400 mb-4">ou 149€/an (2 mois offerts)</p>
                   <ul className="space-y-2 text-sm text-gray-600 mb-6">
+                    <li>✓ À partir du 2e QR modifiable</li>
                     <li>✓ 50 QR modifiables</li>
                     <li>✓ Modifier l&apos;URL après impression</li>
                     <li>✓ Analytics détaillés (appareil, source, historique)</li>
@@ -282,7 +283,7 @@ export default function Dashboard() {
             <h1 className="text-2xl font-bold">Mes QR Codes</h1>
             <p className="text-sm text-gray-400 mt-1">
               {qrCount}/{qrLimit === 9999 ? "∞" : qrLimit}{" "}
-              {canModify ? "QR modifiables" : "QR dans votre espace gratuit"}
+              {canModify ? "QR modifiables" : "QR modifiable offert"}
               {isPaid && subscription?.current_period_end && (
                 <> — Plan {plan.charAt(0).toUpperCase() + plan.slice(1)}</>
               )}
@@ -340,7 +341,7 @@ export default function Dashboard() {
             <p className="text-sm text-gray-500 mb-4">
               {canModify
                 ? "Créez un QR modifiable et changez son URL plus tard si besoin."
-                : "Ce QR sera enregistré dans votre espace gratuit. Passez en Pro pour modifier l'URL après impression."}
+                : "Votre premier QR modifiable est offert. À partir du deuxième, passez en Pro."}
             </p>
             <div className="space-y-3">
               <input
@@ -384,7 +385,7 @@ export default function Dashboard() {
               Aucun QR code pour le moment
             </h2>
             <p className="text-gray-500 mb-6">
-              Créez jusqu&apos;à 10 QR gratuitement, puis passez en Pro pour en gérer 50 et modifier leur destination.
+              Créez votre premier QR modifiable gratuitement, puis passez en Pro pour en gérer 50 et modifier leur destination.
             </p>
             <button
               onClick={() => (qrCount < qrLimit ? setShowCreate(true) : setShowUpgradeModal(true))}

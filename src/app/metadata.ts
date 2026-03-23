@@ -3,9 +3,9 @@ import type { Metadata } from "next";
 export const siteMetadata: Metadata = {
   title: "LeQR.fr — Générateur de QR Codes Professionnel Gratuit",
   description:
-    "Créez des QR codes professionnels en 30 secondes. 10 QR codes gratuits, QR via LeQR, analytics et personnalisation.",
+    "Créez votre QR code en 30 secondes. Téléchargement gratuit sans compte, puis premier QR modifiable offert avec compte.",
   keywords:
-    "QR code, générateur QR code, créer QR code, QR code gratuit, QR code dynamique, QR code professionnel",
+    "QR code, générateur QR code, créer QR code, QR code gratuit, QR code modifiable, QR code professionnel",
   openGraph: {
     title: "LeQR.fr — Créez votre QR Code Pro en 30 secondes",
     description:

@@ -79,9 +79,9 @@ export default function Article() {
         <h2>Combien ça coûte ?</h2>
         <p>
           Sur LeQR.fr, vous pouvez télécharger un <strong>QR statique gratuit sans compte</strong>
-          ou créer <strong>jusqu&apos;à 10 QR dynamiques gratuits avec compte</strong>.
-          Pour modifier l&apos;URL après impression et supprimer l&apos;overlay, le plan Pro
-          est à 14,90€/mois.
+          ou créer <strong>1 QR modifiable offert avec compte</strong>. Pour créer
+          d&apos;autres QR modifiables, modifier l&apos;URL après impression et supprimer
+          l&apos;overlay, le plan Pro est à 14,90€/mois.
         </p>
 
         <div className="bg-blue-600 text-white rounded-2xl p-8 text-center not-prose mt-8">

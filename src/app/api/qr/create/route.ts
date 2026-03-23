@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
       .single();
 
     const plan = sub?.status === "active" ? sub.plan || "free" : "free";
-    const limits: Record<string, number> = { free: 10, pro: 50, business: 9999 };
+    const limits: Record<string, number> = { free: 1, pro: 50, business: 9999 };
     const limit = limits[plan] ?? 0;
 
     if ((count ?? 0) >= limit) {
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
         {
           error:
             plan === "free"
-              ? `Limite du plan gratuit atteinte (${limit} QR). Passez en Pro pour gérer jusqu'à 50 QR modifiables.`
+              ? "Votre QR modifiable offert est déjà utilisé. Passez en Pro pour créer un autre QR modifiable."
               : `Limite atteinte (${limit} QR).`,
         },
         { status: 403 }

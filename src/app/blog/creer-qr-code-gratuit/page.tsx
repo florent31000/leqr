@@ -67,10 +67,10 @@ export default function Article() {
 
         <h2>Et si vous avez besoin d&apos;un QR dynamique ?</h2>
         <p>
-          Créez un compte gratuit pour enregistrer jusqu&apos;à 10 QR dynamiques,
-          suivre leur nombre total de scans et les garder dans votre dashboard.
-          Le plan Pro devient utile le jour où vous voulez modifier l&apos;URL après
-          impression ou retirer l&apos;overlay de redirection.
+          Créez un compte gratuit pour enregistrer votre premier QR modifiable,
+          suivre son nombre total de scans et le garder dans votre dashboard.
+          Le plan Pro devient utile dès que vous voulez créer un deuxième QR
+          modifiable ou modifier l&apos;URL après impression.
         </p>
 
         <div className="bg-blue-600 text-white rounded-2xl p-8 text-center not-prose mt-8">

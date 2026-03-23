@@ -8,7 +8,7 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://leqr.fr";
 
 const PLAN_LIMITS: Record<string, number> = {
-  free: 10,
+  free: 1,
   pro: 50,
   business: 9999,
 };
@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
           {
             error:
               plan === "free"
-                ? `Limite du plan gratuit atteinte (${limit} QR). Passez en Pro pour gérer jusqu'à 50 QR modifiables.`
+                ? "Votre QR modifiable offert est déjà utilisé. Passez en Pro pour créer un autre QR modifiable."
                 : `Limite atteinte (${limit} QR).`,
           },
           { status: 403 }

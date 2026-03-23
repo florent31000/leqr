@@ -37,7 +37,7 @@ export default function QRGenerator() {
   const [dynamicDataURL, setDynamicDataURL] = useState<string | null>(null);
   const [shortCode, setShortCode] = useState<string | null>(null);
   const [previewLoading, setPreviewLoading] = useState(false);
-  const [creatingDynamic, setCreatingDynamic] = useState(false);
+  const [creatingTracked, setCreatingTracked] = useState(false);
   const [downloadingPng, setDownloadingPng] = useState(false);
   const [downloadingSvg, setDownloadingSvg] = useState(false);
   const [accessToken, setAccessToken] = useState<string | null>(null);
@@ -152,7 +152,7 @@ export default function QRGenerator() {
       return;
     }
 
-    setCreatingDynamic(true);
+    setCreatingTracked(true);
     try {
       const res = await fetch("/api/qr/generate", {
         method: "POST",
@@ -178,7 +178,7 @@ export default function QRGenerator() {
     } catch {
       alert("Erreur lors de la génération du QR code.");
     } finally {
-      setCreatingDynamic(false);
+      setCreatingTracked(false);
     }
   };
 
@@ -249,7 +249,7 @@ export default function QRGenerator() {
       }
       const blob = new Blob([json.svg], { type: "image/svg+xml" });
       const link = document.createElement("a");
-      link.download = "leqr-dynamique.svg";
+      link.download = "leqr-modifiable.svg";
       link.href = URL.createObjectURL(blob);
       link.click();
     } finally {
@@ -260,7 +260,7 @@ export default function QRGenerator() {
   const downloadDynamicPNG = () => {
     if (!dynamicDataURL) return;
     const link = document.createElement("a");
-    link.download = "leqr-dynamique.png";
+    link.download = "leqr-modifiable.png";
     link.href = dynamicDataURL;
     link.click();
   };
@@ -383,55 +383,41 @@ export default function QRGenerator() {
             </div>
 
             <div className="space-y-3">
-              <div className="rounded-2xl border border-gray-100 bg-gray-50 p-4">
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <p className="text-sm font-semibold text-gray-900">
-                      QR statique gratuit
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      Sans compte. Idéal pour un lien fixe, du WiFi ou un texte.
-                    </p>
-                  </div>
-                </div>
-                <div className="mt-4 flex gap-3">
-                  <button
-                    onClick={() => downloadStatic("png")}
-                    disabled={!isInputValid() || downloadingPng}
-                    className="flex-1 bg-blue-50 hover:bg-blue-100 disabled:bg-gray-100 disabled:text-gray-400 text-blue-700 font-semibold py-3 px-4 rounded-xl transition-all"
-                  >
-                    {downloadingPng ? "Export..." : "Télécharger PNG"}
-                  </button>
-                  <button
-                    onClick={() => downloadStatic("svg")}
-                    disabled={!isInputValid() || downloadingSvg}
-                    className="flex-1 bg-gray-800 hover:bg-gray-900 disabled:bg-gray-300 text-white font-semibold py-3 px-4 rounded-xl transition-all"
-                  >
-                    {downloadingSvg ? "Export..." : "Télécharger SVG"}
-                  </button>
-                </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => downloadStatic("png")}
+                  disabled={!isInputValid() || downloadingPng}
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white font-semibold py-3 px-4 rounded-xl transition-all shadow-md"
+                >
+                  {downloadingPng ? "Export..." : "Télécharger PNG"}
+                </button>
+                <button
+                  onClick={() => downloadStatic("svg")}
+                  disabled={!isInputValid() || downloadingSvg}
+                  className="flex-1 bg-gray-800 hover:bg-gray-900 disabled:bg-gray-300 text-white font-semibold py-3 px-4 rounded-xl transition-all"
+                >
+                  {downloadingSvg ? "Export..." : "Télécharger SVG"}
+                </button>
               </div>
 
-              <div className="rounded-2xl border-2 border-blue-600 p-4">
-                <p className="text-sm font-semibold text-blue-700">
-                  QR dynamique pour le print
+              <div className="rounded-2xl border border-blue-100 bg-blue-50 p-4">
+                <p className="text-sm font-semibold text-blue-900">
+                  Besoin de suivre les scans ou de modifier le lien plus tard ?
                 </p>
-                <p className="mt-1 text-xs text-gray-600">
-                  Gratuit à la création. Créez votre QR via LeQR pour le suivre,
-                  le retrouver plus tard et l&apos;upgrader le jour où vous devez
-                  changer la destination sans réimprimer.
+                <p className="mt-1 text-xs text-blue-800/80">
+                  Créez un compte pour obtenir votre premier QR modifiable offert.
                 </p>
                 <button
                   onClick={createTrackedQR}
-                  disabled={!isInputValid() || creatingDynamic}
-                  className="mt-4 w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white font-semibold py-3 px-4 rounded-xl transition-all shadow-md hover:shadow-lg"
+                  disabled={!isInputValid() || creatingTracked}
+                  className="mt-3 w-full bg-white hover:bg-blue-100 disabled:bg-gray-100 disabled:text-gray-400 text-blue-700 font-semibold py-3 px-4 rounded-xl transition-all border border-blue-200"
                 >
-                  {creatingDynamic ? "Création..." : "Générer mon QR dynamique"}
+                  {creatingTracked ? "Création..." : "Créer mon QR modifiable"}
                 </button>
                 <p className="mt-2 text-center text-xs text-gray-500">
                   {accessToken
-                    ? "10 QR dynamiques gratuits avec votre compte, puis Pro si vous voulez modifier l'URL."
-                    : "Créez un compte seulement si vous voulez un QR dynamique enregistré dans votre espace."}
+                    ? "Le premier est offert avec votre compte. À partir du deuxième, passez en Pro."
+                    : "Création de compte gratuite."}
                 </p>
               </div>
             </div>
@@ -466,8 +452,7 @@ export default function QRGenerator() {
                     {previewLoading ? "Préparation..." : "Votre QR code apparaîtra ici"}
                   </p>
                   <p className="text-xs text-gray-400 mt-2">
-                    Saisissez votre contenu pour voir l&apos;aperçu puis
-                    téléchargez le QR statique ou créez sa version dynamique.
+                    Saisissez votre contenu pour afficher l&apos;aperçu.
                   </p>
                 </div>
               )}
@@ -476,7 +461,7 @@ export default function QRGenerator() {
             {shortCode ? (
               <div className="mt-6 text-center">
                 <div className="inline-flex items-center gap-2 bg-green-50 text-green-800 px-4 py-2 rounded-full text-sm font-medium border border-green-200">
-                  ✓ QR dynamique créé
+                  ✓ QR modifiable créé
                 </div>
                 <p className="text-sm text-gray-600 mt-3">
                   Retrouvez ce QR dans{" "}
@@ -493,14 +478,14 @@ export default function QRGenerator() {
                     onClick={downloadDynamicPNG}
                     className="rounded-xl bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 transition-all hover:bg-blue-100"
                   >
-                    PNG dynamique
+                    PNG
                   </button>
                   <button
                     onClick={downloadDynamicSVG}
                     disabled={downloadingSvg}
                     className="rounded-xl bg-gray-800 px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-gray-900 disabled:bg-gray-300"
                   >
-                    {downloadingSvg ? "Export..." : "SVG dynamique"}
+                    {downloadingSvg ? "Export..." : "SVG"}
                   </button>
                 </div>
                 <p className="text-xs text-gray-400 mt-3">
@@ -514,11 +499,10 @@ export default function QRGenerator() {
             ) : (
               <div className="mt-6 text-center">
                 <div className="inline-flex items-center gap-2 bg-amber-50 text-amber-800 px-4 py-2 rounded-full text-sm font-medium border border-amber-200">
-                  {previewDataURL ? "Aperçu statique prêt" : "Statique gratuit sans compte"}
+                  {previewDataURL ? "Votre QR est prêt" : "Gratuit sans compte"}
                 </div>
                 <p className="text-xs text-gray-500 mt-2">
-                  Le QR dynamique devient intéressant si vous imprimez des
-                  supports que vous ne voulez pas refaire plus tard.
+                  Téléchargez-le tout de suite ou créez une version modifiable.
                 </p>
               </div>
             )}

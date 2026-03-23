@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import HomePageContent from "@/components/HomePageContent";
 
 export const metadata: Metadata = {
-  title: "LeQR.fr — QR statiques gratuits et QR dynamiques pour le print",
+  title: "LeQR.fr — Générateur de QR Code professionnel gratuit",
   description:
-    "Téléchargez un QR statique gratuit sans compte ou créez un QR dynamique pour vos supports imprimés. QR modifiables, analytics et continuité après impression.",
+    "Créez votre QR code en 30 secondes. Téléchargement gratuit sans compte, puis premier QR modifiable offert avec compte.",
   alternates: {
     canonical: "/",
   },
@@ -19,15 +19,15 @@ const faqJsonLd = {
       name: "Puis-je créer un QR code sans compte ?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Oui. Les QR statiques sont téléchargeables sans compte sur la homepage. Ils conviennent bien pour un lien fixe, du WiFi, un texte, un email ou un numéro de téléphone.",
+        text: "Oui. Vous pouvez créer et télécharger votre QR immédiatement, sans compte.",
       },
     },
     {
       "@type": "Question",
-      name: "À quoi sert un QR dynamique ?",
+      name: "Le premier QR modifiable est-il gratuit ?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Un QR dynamique passe par LeQR. Il permet de conserver le même QR imprimé, de suivre les scans et d'activer plus tard une modification d'URL sans refaire vos supports.",
+        text: "Oui. Votre premier QR modifiable est offert avec compte. A partir du deuxieme, vous passez en Pro.",
       },
     },
   ],
@@ -46,7 +46,7 @@ const softwareJsonLd = {
     priceCurrency: "EUR",
   },
   description:
-    "QR statiques gratuits et QR dynamiques conçus pour garder le même code sur les supports imprimés.",
+    "Générateur de QR code avec téléchargement gratuit sans compte et QR modifiable offert avec compte.",
   url: "https://leqr.fr",
 };
 

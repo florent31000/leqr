@@ -6,15 +6,15 @@ import AnalyticsScripts from "@/components/AnalyticsScripts";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://leqr.fr"),
-  title: "LeQR.fr — QR statiques gratuits et QR dynamiques pour le print",
+  title: "LeQR.fr — Générateur de QR Code professionnel gratuit",
   description:
-    "Téléchargez un QR statique gratuit sans compte ou créez un QR dynamique pour vos supports imprimés. Analytics, modification d'URL et continuité sans réimpression.",
+    "Créez votre QR code en 30 secondes. Téléchargement gratuit sans compte, puis premier QR modifiable offert avec compte.",
   keywords:
-    "QR code, générateur QR code, QR code gratuit, QR code dynamique, QR code statique, QR code professionnel",
+    "QR code, générateur QR code, QR code gratuit, QR code modifiable, QR code professionnel",
   openGraph: {
-    title: "LeQR.fr — QR statiques gratuits et QR dynamiques pour le print",
+    title: "LeQR.fr — Générateur de QR Code professionnel gratuit",
     description:
-      "Créez un QR statique gratuit sans compte ou un QR dynamique pensé pour vos supports imprimés.",
+      "Créez votre QR code en 30 secondes. Gratuit sans compte, puis QR modifiable offert avec compte.",
     type: "website",
     locale: "fr_FR",
     url: "https://leqr.fr",
@@ -30,9 +30,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "LeQR.fr — QR statiques gratuits et QR dynamiques",
+    title: "LeQR.fr — Générateur de QR Code professionnel",
     description:
-      "Créez vos QR pour le print, suivez les scans et gardez le même code même si vos liens évoluent.",
+      "Créez votre QR, téléchargez-le gratuitement et passez au modifiable si vous en avez besoin.",
     images: ["/logo.png"],
   },
   icons: {
