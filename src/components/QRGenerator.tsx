@@ -404,21 +404,13 @@ export default function QRGenerator() {
                 <p className="text-sm font-semibold text-blue-900">
                   Besoin de suivre les scans ou de modifier le lien plus tard ?
                 </p>
-                <p className="mt-1 text-xs text-blue-800/80">
-                  Créez un compte pour obtenir votre premier QR modifiable offert.
-                </p>
                 <button
                   onClick={createTrackedQR}
                   disabled={!isInputValid() || creatingTracked}
                   className="mt-3 w-full bg-white hover:bg-blue-100 disabled:bg-gray-100 disabled:text-gray-400 text-blue-700 font-semibold py-3 px-4 rounded-xl transition-all border border-blue-200"
                 >
-                  {creatingTracked ? "Création..." : "Créer mon QR modifiable"}
+                  {creatingTracked ? "Création..." : "Créer gratuitement mon QR modifiable"}
                 </button>
-                <p className="mt-2 text-center text-xs text-gray-500">
-                  {accessToken
-                    ? "Le premier est offert avec votre compte. À partir du deuxième, passez en Pro."
-                    : "Création de compte gratuite."}
-                </p>
               </div>
             </div>
 
@@ -497,14 +489,7 @@ export default function QRGenerator() {
                 </p>
               </div>
             ) : (
-              <div className="mt-6 text-center">
-                <div className="inline-flex items-center gap-2 bg-amber-50 text-amber-800 px-4 py-2 rounded-full text-sm font-medium border border-amber-200">
-                  {previewDataURL ? "Votre QR est prêt" : "Gratuit sans compte"}
-                </div>
-                <p className="text-xs text-gray-500 mt-2">
-                  Téléchargez-le tout de suite ou créez une version modifiable.
-                </p>
-              </div>
+              <div className="mt-6 text-center" />
             )}
           </div>
         </div>

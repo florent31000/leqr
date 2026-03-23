@@ -12,28 +12,53 @@ export const metadata = {
 export default function QRCodeFlyerAffiche() {
   return (
     <UseCaseLanding
-      title="QR Code pour flyer et affiche"
-      subtitle="Ajoutez un QR à vos campagnes print pour envoyer vers une offre, une landing page ou une prise de rendez-vous, puis faites évoluer la destination si la campagne change."
-      promise="Un flyer imprimé coûte plus cher qu'un QR. Le vrai gain est de ne pas devoir le refaire quand l'offre, le lien ou la campagne évoluent."
-      staticWhen="Le statique convient pour une opération courte, un lien fixe ou un support jetable."
-      dynamicWhen="Le dynamique est recommandé pour toute campagne suivie dans le temps, multi-emplacements ou liée à un budget d'acquisition."
-      steps={[
-        "Créez la landing page ou l'offre que votre flyer doit promouvoir.",
-        "Générez un QR et téléchargez-le en haute définition.",
-        "Imprimez le même QR sur vos affiches, flyers ou PLV.",
-        "Suivez les scans et passez en Pro si vous devez changer la destination après diffusion.",
+      eyebrow="Pour flyers, affiches et campagnes print"
+      title="Créez votre QR code pour flyer ou affiche"
+      subtitle="Envoyez vers une offre, une landing page ou une prise de rendez-vous, puis gardez la possibilité de faire évoluer le lien plus tard."
+      whyTitle="Pourquoi c'est utile pour le print"
+      whyText="Quand un flyer est imprimé, le coût n'est pas le QR. Le coût, c'est de devoir refaire les supports si l'offre ou la destination change."
+      benefits={[
+        {
+          icon: "🧾",
+          title: "Parfait pour le print",
+          desc: "Téléchargez votre QR en PNG ou SVG pour vos flyers, affiches et PLV.",
+        },
+        {
+          icon: "🎯",
+          title: "Trafic ciblé",
+          desc: "Renvoyez vers une landing précise, une offre locale ou une prise de rendez-vous.",
+        },
+        {
+          icon: "🔄",
+          title: "Lien modifiable",
+          desc: "Créez un compte pour garder la possibilité de modifier le lien plus tard.",
+        },
       ]}
+      placementsTitle="Où utiliser votre QR print"
       placements={[
         "Flyers distribués en boîte aux lettres",
         "Affiches vitrines",
         "PLV en magasin",
         "Affichage salon ou stand",
         "Chevalets de trottoir",
-        "Coupons et bons de réduction imprimés",
+        "Coupons ou bons imprimés",
+      ]}
+      faq={[
+        {
+          q: "Puis-je télécharger le QR tout de suite ?",
+          a: "Oui. Cette page permet de générer et télécharger le QR immédiatement, sans compte.",
+        },
+        {
+          q: "Puis-je suivre les scans ?",
+          a: "Oui. Avec compte, vous obtenez un QR modifiable avec compteur de scans.",
+        },
+        {
+          q: "Et si ma campagne change ?",
+          a: "Passez au modifiable pour garder le même QR même si votre offre ou votre URL changent après impression.",
+        },
       ]}
       ctaTitle="Préparez votre campagne print"
-      ctaText="Téléchargez un QR statique tout de suite ou créez un QR dynamique pour piloter votre campagne sur la durée."
-      ctaLabel="Créer mon QR print →"
+      ctaText="Créez votre QR ici, imprimez-le, puis rendez-le modifiable si la campagne doit évoluer."
     />
   );
 }

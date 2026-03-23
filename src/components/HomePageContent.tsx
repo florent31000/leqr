@@ -23,39 +23,6 @@ const faqItems = [
   },
 ];
 
-const useCases = [
-  {
-    href: "/qr-code-avis-google",
-    title: "Avis Google",
-    desc: "Collectez plus d'avis en caisse, sur l'addition ou sur vos cartes de remerciement.",
-  },
-  {
-    href: "/qr-code-carte-visite",
-    title: "Carte de visite",
-    desc: "Ne réimprimez plus vos cartes quand votre site, votre portfolio ou votre LinkedIn changent.",
-  },
-  {
-    href: "/qr-code-menu-restaurant",
-    title: "Menu restaurant",
-    desc: "Mettez à jour la carte, les plats du jour ou le menu du soir sans toucher à vos supports.",
-  },
-  {
-    href: "/qr-code-flyer-affiche",
-    title: "Flyers et affiches",
-    desc: "Pilotez la même campagne print sur plusieurs destinations et mesurez les scans par emplacement.",
-  },
-  {
-    href: "/qr-code-packaging-produit",
-    title: "Packaging produit",
-    desc: "Gardez le même QR sur vos emballages et faites évoluer notices, SAV ou contenus marketing.",
-  },
-  {
-    href: "/qr-code-evenement",
-    title: "Événement",
-    desc: "Programme, infos pratiques, photos ou feedback : un même QR qui évolue avant, pendant et après l'événement.",
-  },
-];
-
 export default function HomePageContent() {
   const [loggedIn, setLoggedIn] = useState(false);
 
@@ -79,12 +46,6 @@ export default function HomePageContent() {
             </span>
           </a>
           <div className="flex items-center gap-6">
-            <a
-              href="#examples"
-              className="hidden text-sm text-gray-600 hover:text-gray-900 md:block"
-            >
-              Exemples
-            </a>
             <a
               href="#pricing"
               className="hidden text-sm text-gray-600 hover:text-gray-900 md:block"
@@ -140,7 +101,7 @@ export default function HomePageContent() {
       <section className="px-4 py-20">
         <div className="mx-auto max-w-5xl">
           <h2 className="mb-12 text-center text-3xl font-bold">
-            Simple au départ, plus puissant si vous en avez besoin
+            Simple au départ, plus puissant si besoin
           </h2>
           <div className="grid gap-6 md:grid-cols-3">
             {[
@@ -170,33 +131,6 @@ export default function HomePageContent() {
                 </h3>
                 <p className="text-sm text-gray-600">{item.desc}</p>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="examples" className="bg-gray-50 px-4 py-20">
-        <div className="mx-auto max-w-5xl">
-          <h2 className="mb-4 text-center text-3xl font-bold">
-            Exemples d&apos;usage
-          </h2>
-          <p className="mx-auto mb-12 max-w-2xl text-center text-gray-500">
-            Cartes de visite, menus, avis Google, flyers, packaging, événements.
-            Le même outil, avec des pages dédiées pour chaque besoin.
-          </p>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {useCases.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="rounded-2xl border border-gray-100 bg-white p-6 transition-all hover:-translate-y-0.5 hover:shadow-lg"
-              >
-                <h3 className="text-lg font-semibold text-gray-900">{item.title}</h3>
-                <p className="mt-2 text-sm text-gray-500">{item.desc}</p>
-                <span className="mt-4 inline-block text-sm font-medium text-blue-600">
-                  En savoir plus →
-                </span>
-              </a>
             ))}
           </div>
         </div>
@@ -336,8 +270,8 @@ export default function HomePageContent() {
             <h4 className="mb-3 font-semibold text-white">Produit</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="#examples" className="transition-colors hover:text-white">
-                  Exemples
+                <a href="/qr-code-avis-google" className="transition-colors hover:text-white">
+                  Avis Google
                 </a>
               </li>
               <li>

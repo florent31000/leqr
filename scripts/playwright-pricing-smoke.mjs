@@ -58,9 +58,8 @@ async function run() {
     "Le bloc d'aperçu de QR n'est pas visible."
   );
   assert(
-    homepageHtml.includes("Menu restaurant") ||
-      homepageHtml.includes("Carte de visite"),
-    "La section exemples n'est pas visible sur la homepage."
+    !homepageHtml.includes("Une landing page par vrai besoin métier"),
+    "Un wording interne est encore visible sur la homepage."
   );
   assert(
     !homepageHtml.includes(">Business<"),
@@ -74,11 +73,12 @@ async function run() {
   await page.goto(baseUrl, { waitUntil: "networkidle" });
   await page.waitForSelector('input[type="url"]');
   assert(
-    await page.getByRole("button", { name: /Créer mon QR modifiable/i }).isVisible(),
+    await page
+      .getByRole("button", { name: /Créer gratuitement mon QR modifiable/i })
+      .isVisible(),
     "Le CTA QR modifiable n'est pas visible dans l'interface."
   );
   await page.locator('input[type="url"]').fill("https://example.com/landing");
-  await page.waitForSelector('img[alt="QR Code"]', { timeout: 30000 });
 
   const staticResponse = await context.request.post(`${baseUrl}/api/qr/generate`, {
     data: {
@@ -120,8 +120,18 @@ async function run() {
     `Message backend inattendu: ${JSON.stringify(blockedStatus.body)}`
   );
 
-  await page.getByRole("button", { name: /Créer mon QR modifiable/i }).click();
+  await page
+    .getByRole("button", { name: /Créer gratuitement mon QR modifiable/i })
+    .click();
   await page.waitForURL(/\/connexion\?signup=true/, { timeout: 30000 });
+
+  const useCaseResponse = await context.request.get(`${baseUrl}/qr-code-avis-google`);
+  const useCaseHtml = await useCaseResponse.text();
+  assert(
+    useCaseHtml.includes("Créez votre QR code pour avis Google") ||
+      useCaseHtml.includes("Cr&eacute;ez votre QR code pour avis Google"),
+    "La landing page Avis Google n'est pas correctement publiée."
+  );
 
   assert(
     consoleErrors.length === 0,

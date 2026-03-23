@@ -12,28 +12,53 @@ export const metadata = {
 export default function QRCodePackagingProduit() {
   return (
     <UseCaseLanding
-      title="QR Code packaging produit"
-      subtitle="Placez un QR sur vos emballages pour diriger vers une notice, un tutoriel, une page SAV, une fiche produit ou une offre complémentaire."
-      promise="Le packaging vit plus longtemps qu'une campagne web. Un QR dynamique vous évite de jeter des emballages ou des notices dès qu'un lien doit évoluer."
-      staticWhen="Le statique suffit si vous renvoyez vers une page immuable, comme une simple fiche PDF déjà finalisée."
-      dynamicWhen="Le dynamique devient utile dès que vous voulez faire évoluer une notice, un contenu SAV, un tutoriel vidéo ou une offre commerciale."
-      steps={[
-        "Choisissez la destination prioritaire : notice, vidéo, page SAV ou fiche produit.",
-        "Téléchargez un QR propre en PNG ou SVG pour votre maquette packaging.",
-        "Imprimez et diffusez le même QR sur vos lots, boîtes ou notices.",
-        "Activez ensuite le Pro si vous devez changer la destination après lancement.",
+      eyebrow="Pour packaging, notices et SAV"
+      title="Créez votre QR code pour packaging produit"
+      subtitle="Ajoutez un QR sur vos emballages pour renvoyer vers une notice, un tutoriel, une page SAV ou une fiche produit."
+      whyTitle="Pourquoi c'est utile sur un packaging"
+      whyText="Le packaging reste longtemps entre vos mains et celles de vos clients. Si le lien derrière doit évoluer, mieux vaut garder le même QR plutôt que refaire boîtes, notices ou étiquettes."
+      benefits={[
+        {
+          icon: "📦",
+          title: "Sur l'emballage",
+          desc: "Ajoutez le QR sur boîte, notice, étiquette ou carte d'activation.",
+        },
+        {
+          icon: "🎥",
+          title: "Vers le bon contenu",
+          desc: "Renvoyez vers un tutoriel, une notice PDF, une fiche produit ou une page SAV.",
+        },
+        {
+          icon: "♻️",
+          title: "Sans réimpression",
+          desc: "Gardez le même QR si vos contenus évoluent après le lancement du produit.",
+        },
       ]}
+      placementsTitle="Où placer votre QR produit"
       placements={[
         "Boîte produit",
         "Étiquette de flacon ou pot",
         "Notice imprimée",
         "Packaging e-commerce",
         "Carton d'expédition",
-        "Carte de bienvenue ou d'activation",
+        "Carte d'activation",
+      ]}
+      faq={[
+        {
+          q: "Puis-je l'utiliser pour une notice ?",
+          a: "Oui. C'est l'un des usages les plus pratiques pour un QR sur packaging.",
+        },
+        {
+          q: "Puis-je changer le contenu après impression ?",
+          a: "Oui. Le QR modifiable sert précisément à ça. Le premier est offert avec compte.",
+        },
+        {
+          q: "Le téléchargement est-il inclus ?",
+          a: "Oui. Vous pouvez télécharger le QR en PNG ou SVG pour l'intégrer à votre maquette.",
+        },
       ]}
       ctaTitle="Créez votre QR packaging"
-      ctaText="Testez gratuitement votre QR puis gardez la possibilité de faire évoluer la destination sans réimprimer vos emballages."
-      ctaLabel="Créer mon QR packaging →"
+      ctaText="Générez votre QR maintenant, puis gardez l'option modifiable si votre contenu produit évolue."
     />
   );
 }
