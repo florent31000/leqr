@@ -5,10 +5,26 @@ import { getSupabase } from "@/lib/supabase";
 
 export default function Connexion() {
   const [isSignUp, setIsSignUp] = useState(false);
+  const [nextPath, setNextPath] = useState("/dashboard");
+
+  const getSafeNextPath = () => {
+    const params = new URLSearchParams(window.location.search);
+    const next = params.get("next");
+    if (next && next.startsWith("/") && !next.startsWith("//")) {
+      return next;
+    }
+    return "/dashboard";
+  };
+
+  const getPublicAppUrl = () => {
+    const publicUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin;
+    return publicUrl.replace(/\/$/, "");
+  };
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("signup") === "true") setIsSignUp(true);
+    setNextPath(getSafeNextPath());
   }, []);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,7 +40,13 @@ export default function Connexion() {
 
     const supabase = getSupabase();
     if (isSignUp) {
-      const { error } = await supabase.auth.signUp({ email, password });
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${getPublicAppUrl()}${getSafeNextPath()}`,
+        },
+      });
       if (error) {
         setError(error.message);
       } else {
@@ -40,7 +62,7 @@ export default function Connexion() {
       if (error) {
         setError("Email ou mot de passe incorrect");
       } else {
-        window.location.href = "/dashboard";
+        window.location.href = nextPath;
       }
     }
     setLoading(false);
@@ -56,7 +78,7 @@ export default function Connexion() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/dashboard`,
+          redirectTo: `${getPublicAppUrl()}${getSafeNextPath()}`,
           queryParams: {
             access_type: "offline",
             prompt: "select_account",

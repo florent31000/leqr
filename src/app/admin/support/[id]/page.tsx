@@ -40,7 +40,7 @@ export default function SupportConversationPage({
         data: { session },
       } = await getSupabase().auth.getSession();
       if (!session) {
-        window.location.href = "/connexion";
+        window.location.href = `/connexion?next=/admin/support/${conversationId}`;
         return;
       }
 
