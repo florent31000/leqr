@@ -3,6 +3,10 @@
 import { useEffect, useState, useCallback } from "react";
 import { getSupabase } from "@/lib/supabase";
 import type { QRCode } from "@/lib/supabase";
+import {
+  getStoredAcquisition,
+  syncAcquisitionToUser,
+} from "@/lib/acquisition";
 
 declare global {
   interface Window {
@@ -29,22 +33,53 @@ export default function Dashboard() {
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   const loadData = useCallback(async () => {
+    const supabase = getSupabase();
     const {
       data: { session },
-    } = await getSupabase().auth.getSession();
+    } = await supabase.auth.getSession();
     if (!session) {
       window.location.href = "/connexion";
       return;
     }
+    await syncAcquisitionToUser(supabase, session.user);
     setUser(session.user);
 
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const createdAt = session.user.created_at
+        ? new Date(session.user.created_at).getTime()
+        : 0;
+      const isFreshAccount =
+        createdAt > 0 && Date.now() - createdAt < 10 * 60 * 1000;
+      const alreadyFiredKey = `leqr-signup-fired-${session.user.id}`;
+      const alreadyFired =
+        window.localStorage.getItem(alreadyFiredKey) === "true";
+
+      const shouldFire =
+        (isFreshAccount && !alreadyFired) || params.get("signup") === "true";
+
+      if (shouldFire && !alreadyFired) {
+        if (typeof window.gtag === "function") {
+          window.gtag("event", "page_view", {
+            page_path: "/dashboard?signup=true",
+            page_location: `${window.location.origin}/dashboard?signup=true`,
+          });
+        }
+        window.localStorage.setItem(alreadyFiredKey, "true");
+      }
+
+      if (params.get("signup") === "true" && !isFreshAccount) {
+        window.history.replaceState({}, "", "/dashboard");
+      }
+    }
+
     const [qrRes, subRes] = await Promise.all([
-      getSupabase()
+      supabase
         .from("qr_codes")
         .select("*")
         .eq("user_id", session.user.id)
         .order("created_at", { ascending: false }),
-      getSupabase()
+      supabase
         .from("subscriptions")
         .select("plan, status, current_period_end")
         .eq("user_id", session.user.id)
@@ -87,7 +122,11 @@ export default function Dashboard() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${session.access_token}`,
       },
-      body: JSON.stringify({ plan: "pro", billing }),
+      body: JSON.stringify({
+        plan: "pro",
+        billing,
+        acquisition: getStoredAcquisition(),
+      }),
     });
 
     if (res.ok) {

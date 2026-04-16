@@ -3,6 +3,7 @@ import "./globals.css";
 import ChatBot from "@/components/ChatBot";
 import CookieBanner from "@/components/CookieBanner";
 import AnalyticsScripts from "@/components/AnalyticsScripts";
+import AttributionTracker from "@/components/AttributionTracker";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://leqr.fr"),
@@ -56,6 +57,7 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         {children}
+        <AttributionTracker />
         <ChatBot />
         <CookieBanner />
         <AnalyticsScripts />

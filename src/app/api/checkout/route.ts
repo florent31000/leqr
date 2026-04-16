@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { plan, billing = "monthly" } = body;
+    const { plan, billing = "monthly", acquisition } = body;
 
     if (plan !== "pro" || !["monthly", "annual"].includes(billing)) {
       return NextResponse.json(
@@ -64,6 +64,15 @@ export async function POST(req: NextRequest) {
     }
 
     const stripe = getStripe();
+    const acquisitionMetadata =
+      acquisition && typeof acquisition === "object"
+        ? Object.fromEntries(
+            Object.entries(acquisition)
+              .filter(([, value]) => typeof value === "string" && value)
+              .map(([key, value]) => [key, String(value).slice(0, 200)])
+          )
+        : {};
+
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       customer: customerId,
@@ -84,7 +93,12 @@ export async function POST(req: NextRequest) {
       ],
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?upgraded=true`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`,
-      metadata: { user_id: user.id, plan, billing },
+      metadata: {
+        user_id: user.id,
+        plan,
+        billing,
+        ...acquisitionMetadata,
+      },
       allow_promotion_codes: true,
     });
 

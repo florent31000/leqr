@@ -20,6 +20,9 @@
 .env
 .env*.local
 
+# local checkpoint scripts (contain secrets)
+/scripts/checkpoint-*.js
+
 # misc
 .DS_Store
 *.pem

@@ -2,6 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { getSupabase } from "@/lib/supabase";
+import {
+  buildUserAcquisitionData,
+  captureAcquisitionTouchpoint,
+} from "@/lib/acquisition";
 
 export default function Connexion() {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -25,6 +29,7 @@ export default function Connexion() {
     const params = new URLSearchParams(window.location.search);
     if (params.get("signup") === "true") setIsSignUp(true);
     setNextPath(getSafeNextPath());
+    captureAcquisitionTouchpoint();
   }, []);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -40,11 +45,15 @@ export default function Connexion() {
 
     const supabase = getSupabase();
     if (isSignUp) {
+      const signupNextPath = getSafeNextPath().startsWith("/dashboard")
+        ? "/dashboard?signup=true"
+        : getSafeNextPath();
       const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: `${getPublicAppUrl()}${getSafeNextPath()}`,
+          data: buildUserAcquisitionData(),
+          emailRedirectTo: `${getPublicAppUrl()}${signupNextPath}`,
         },
       });
       if (error) {
@@ -75,10 +84,14 @@ export default function Connexion() {
 
     try {
       const supabase = getSupabase();
+      captureAcquisitionTouchpoint();
+      const base = getSafeNextPath().startsWith("/dashboard")
+        ? "/dashboard?signup=true"
+        : getSafeNextPath();
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${getPublicAppUrl()}${getSafeNextPath()}`,
+          redirectTo: `${getPublicAppUrl()}${base}`,
           queryParams: {
             access_type: "offline",
             prompt: "select_account",

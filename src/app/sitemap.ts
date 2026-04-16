@@ -13,6 +13,7 @@ const routes = [
   "/qr-code-menu-restaurant",
   "/qr-code-flyer-affiche",
   "/qr-code-packaging-produit",
+  "/qr-code-portfolio-creatif",
   "/confidentialite",
   "/mentions-legales",
   "/cgv",
